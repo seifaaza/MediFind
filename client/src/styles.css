@@ -2,13 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* :root {
+:root {
   --light-bg: #eafbff;
   --main-bg: #000;
 }
 html {
-  background-color: var(--main-bg);
+  @apply bg-primary;
 }
 body {
   background-color: var(--light-bg);
-} */
+  @apply font-main;
+}
