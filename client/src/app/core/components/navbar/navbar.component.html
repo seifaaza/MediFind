@@ -1,12 +1,16 @@
 <header
+  #navbarHeader
   class="bg-primary fixed top-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full"
 >
   <nav
     class="3xl:container mx-auto relative w-full md:flex md:items-center md:justify-between md:gap-3"
   >
     <div
-      [ngClass]="{ 'flex-col': isOpen, 'flex-row': !isOpen }"
-      class="w-full lg:m-0 flex lg:!flex-row justify-between items-center"
+      [ngClass]="{
+        'flex-col items-center h-[420px] duration-300 ease-out': isOpen,
+        'flex-row items-start h-[56px] duration-100': !isOpen
+      }"
+      class="w-full lg:items-center lg:!h-[56px] lg:!duration-0 lg:m-0 flex lg:!flex-row justify-between overflow-hidden"
     >
       <div class="w-full flex justify-between items-center">
         <svg
@@ -73,7 +77,7 @@
         </svg>
 
         <div
-          class="mr-1 p-2 w-14 lg:hidden flex flex-col items-end gap-2 cursor-pointer relative"
+          class="mr-1 px-2 py-3 w-14 lg:hidden flex flex-col items-end gap-2 cursor-pointer relative"
           (click)="toggleMenu()"
         >
           <span
@@ -88,8 +92,11 @@
       </div>
 
       <div
-        [ngClass]="{ flex: isOpen, hidden: !isOpen }"
-        class="grow lg:!flex flex-col md:flex-row md:justify-end md:items-center my-4 lg:my-0"
+        [ngClass]="{
+          'flex opacity-100': isOpen,
+          'hidden opacity-0': !isOpen
+        }"
+        class="grow lg:!flex lg:!opacity-100 flex-col md:flex-row md:justify-end md:items-center my-4 lg:my-0"
       >
         <ng-container *ngFor="let link of links">
           <button

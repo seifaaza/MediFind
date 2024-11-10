@@ -1,4 +1,11 @@
-import { Component, HostBinding, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  ViewChild,
+  ElementRef,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -24,6 +31,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router) {}
 
+  @ViewChild('navbarHeader', { static: true }) navbarHeader!: ElementRef;
+
   ngOnInit(): void {
     this.updateBodyScroll();
   }
@@ -38,6 +47,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.updateBodyScroll();
   }
 
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event) {
+    const target = event.target as HTMLElement;
+    if (this.isOpen && !this.navbarHeader.nativeElement.contains(target)) {
+      this.closeMenu();
+    }
+  }
+
   isActive(route: string): boolean {
     return this.router.url === route || this.activeLink === route;
   }
@@ -49,16 +66,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   updateBodyScroll(): void {
     if (this.isOpen) {
-      document.body.classList.add('overflow-hidden');
-      document.body.classList.add('lg:overflow-scroll');
+      document.body.classList.add('overflow-hidden', 'lg:overflow-scroll');
     } else {
-      document.body.classList.remove('overflow-hidden');
-      document.body.classList.remove('lg:overflow-scroll');
+      document.body.classList.remove('overflow-hidden', 'lg:overflow-scroll');
     }
   }
 
   ngOnDestroy(): void {
-    document.body.classList.remove('overflow-hidden');
-    document.body.classList.remove('lg:overflow-scroll');
+    document.body.classList.remove('overflow-hidden', 'lg:overflow-scroll');
   }
 }
