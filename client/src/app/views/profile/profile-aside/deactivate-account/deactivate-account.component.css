@@ -1,0 +1,11 @@
+::ng-deep .ant-modal-wrap {
+  animation: none !important; /* Disable default modal animation */
+}
+
+::ng-deep .ant-modal {
+  transition: none !important; /* Remove transition for the modal */
+}
+
+::ng-deep .ant-modal-content {
+  animation: none !important; /* Disable content animation */
+}

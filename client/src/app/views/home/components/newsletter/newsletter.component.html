@@ -1,0 +1,60 @@
+<section
+  class="md:container mx-auto pt-10 lg:pt-16 px-3 w-full flex flex-col gap-10 lg:gap-16 items-center"
+>
+  <h1
+    class="text-xl md:text-2xl xl:text-3xl text-primary text-center title-fade-in fade-in"
+  >
+    Stay Updated with Our Newsletter
+  </h1>
+
+  <div class="flex flex-col md:flex-row items-center gap-4 lg:gap-10 xl:gap-14">
+    <div class="fade-in">
+      <lord-icon
+        #lordIcon
+        src="https://cdn.lordicon.com/ozlkyfxg.json"
+        trigger="none"
+        stroke="light"
+        state="in-reveal"
+        colors="primary:#64748b,secondary:#0894ff"
+        style="width: 110px; height: 110px"
+      >
+      </lord-icon>
+    </div>
+    <article
+      class="flex flex-col gap-5 max-w-md lg:max-w-xl section-fade-in fade-in"
+    >
+      <h2 class="text-sm lg:text-base !leading-relaxed text-slate-500">
+        Stay informed with the latest health tips, medication updates, and
+        wellness insights.
+      </h2>
+      <form
+        (ngSubmit)="onSubmit()"
+        [formGroup]="newsletterForm"
+        class="flex flex-col md:flex-row gap-4 w-full max-w-lg"
+      >
+        <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
+          <input
+            formControlName="email"
+            type="text"
+            nz-input
+            placeholder="Enter your Email"
+            class="h-full"
+          />
+        </nz-input-group>
+        <ng-template #suffixButton>
+          <button
+            [disabled]="newsletterForm.invalid || loading"
+            nz-button
+            nzType="primary"
+            nzSize="large"
+            class="flex items-center rounded-l-none"
+          >
+            Submit
+
+            <span nz-icon nzType="send" nzTheme="outline"></span>
+          </button>
+        </ng-template>
+      </form>
+    </article>
+  </div>
+</section>

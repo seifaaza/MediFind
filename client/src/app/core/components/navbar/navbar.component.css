@@ -1,0 +1,21 @@
+.active {
+  @apply bg-tertiary;
+}
+
+.navbar-header {
+  transform: translateY(-100%);
+}
+
+/* Slide down animation class applied only for home */
+.slide-down {
+  animation: slideDown 0.8s ease-out forwards;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,127 @@
+<section
+  class="bg-primary py-16 xl:py-24 relative min-h-screen 3xl:min-h-fit flex justify-center flex-col gap-14 3xl:gap-20"
+>
+  <span
+    class="absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-primary to-transparent z-10"
+  ></span>
+  <span
+    class="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-primary to-transparent z-10"
+  ></span>
+  <span
+    class="absolute bottom-0 left-0 w-full h-full z-10"
+    style="background: radial-gradient(circle, #bee3ff2a 0%, #0894ff5c 100%)"
+  ></span>
+
+  <!-- Background image span -->
+  <span class="absolute inset-0 z-0">
+    <img src="/bg.jpg" alt="" class="w-full h-full object-cover bg-fade-in" />
+  </span>
+
+  <article
+    class="w-fit mx-auto px-3 mt-10 lg:mt-14 xl:mt-16 relative z-10 flex flex-col gap-4 text-center"
+  >
+    <h1
+      class="rolling-text text-[calc(.8rem+4vw)] md:text-4xl lg:text-6xl xl:text-[4rem] text-white font-black whitespace-nowrap !leading-none"
+    >
+      Your Health Compass
+    </h1>
+    <h2
+      class="rolling-text text-[calc(.4rem+4.2vw)] md:text-4xl lg:text-6xl xl:text-[4rem] text-white font-black whitespace-nowrap !leading-none"
+    >
+      Smart, Reliable, and Personal
+    </h2>
+    <p
+      class="lg:mt-2 text-blue-100 text-sm sm:text-base lg:text-lg max-w-2xl lg:max-w-3xl fade-in mx-auto"
+    >
+      Empowering Your Wellness Journey with Personalized Insights, Reliable
+      Support, and Smart Recommendations
+    </p>
+    <div class="mt-6 flex gap-3 md:gap-4 xl:gap-5 fade-in mx-auto">
+      <button
+        routerLink="/learn-more"
+        nz-button
+        nzSize="large"
+        class="flex items-center text-white bg-transparent border-white"
+      >
+        Learn More
+        <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+      </button>
+      <button
+        routerLink="/create-profile"
+        nz-button
+        nzSize="large"
+        class="flex !text-primary items-center !border-white brightness-95 hover:brightness-100"
+      >
+        Get Started
+        <span nz-icon nzType="right" nzTheme="outline"></span>
+      </button>
+    </div>
+  </article>
+  <div
+    class="md:container mx-auto lg:mt-auto px-8 w-full grid justify-center lg:justify-items-center gap-8 md:gap-12 lg:gap-8 grid-cols-2 md:grid-cols-4 text-center relative z-20"
+  >
+    <div
+      *ngFor="let stat of stats; let i = index"
+      class="w-fit mx-auto stats-fade-in"
+    >
+      <p
+        class="text-2xl lg:text-3xl xl:text-[1.95rem] font-semibold text-blue-50"
+      >
+        {{ stat.value }}
+      </p>
+      <p
+        class="mt-[.4rem] text-sm lg:text-base 2xl:text-[1.1rem] text-blue-100"
+      >
+        {{ stat.text }}
+      </p>
+    </div>
+  </div>
+
+  <!-- <div
+    class="md:container mx-auto lg:mt-auto px-8 w-full grid justify-center lg:justify-items-center gap-6 grid-cols-2 md:grid-cols-4 text-center relative z-20"
+  >
+    <div class="w-fit mx-auto">
+      <p
+        class="text-2xl lg:text-3xl xl:text-[1.95rem] font-semibold text-blue-50"
+      >
+        +1000
+      </p>
+      <p class="mt-[.4rem] text-sm md:text-base xl:text-[1.1rem] text-blue-100">
+        Medications and Supplies
+      </p>
+    </div>
+
+    <div class="w-fit mx-auto">
+      <p
+        class="text-2xl lg:text-3xl xl:text-[1.95rem] font-semibold text-blue-50"
+      >
+        +90%
+      </p>
+      <p class="mt-[.4rem] text-sm md:text-base xl:text-[1.1rem] text-blue-100">
+        Personalized Recommendations
+      </p>
+    </div>
+
+    <div class="w-fit mx-auto">
+      <p
+        class="text-2xl lg:text-3xl xl:text-[1.95rem] font-semibold text-blue-50"
+      >
+        +5000
+      </p>
+      <p class="mt-[.4rem] text-sm md:text-base xl:text-[1.1rem] text-blue-100">
+        Discussions and Reviews
+      </p>
+    </div>
+
+    <div class="w-fit mx-auto">
+      <p
+        class="text-2xl lg:text-3xl xl:text-[1.95rem] font-semibold text-blue-50"
+      >
+        +2000
+      </p>
+      <p class="mt-[.4rem] text-sm md:text-base xl:text-[1.1rem] text-blue-100">
+        Daily Health Logs
+      </p>
+    </div>
+  </div> -->
+</section>

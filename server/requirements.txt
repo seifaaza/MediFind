@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+SQLAlchemy
+passlib[bcrypt]
+bcrypt==3.2.0
+python-jose[cryptography]
+psycopg2-binary
+python-dotenv
+email-validator
+google-auth
+google-auth-oauthlib
+google-auth-httplib2

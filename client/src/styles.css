@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --light-bg: #eafbff;
+  --main-bg: #000;
+}
+html {
+  @apply bg-primary;
+}
+body {
+  @apply font-main bg-light;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(8px); /* Slide up effect */
+  transition: opacity 0.6s ease 0.1s, transform 0.6s ease 0.1s; /* Smooth transition */
+}
+
+.fade-in-visible {
+  opacity: 1;
+  transform: translateY(0); /* Reset position */
+}
+
+.ant-modal-content {
+  @apply p-1 md:p-4;
+}
+
+.ant-modal {
+  animation-duration: 0s !important; /* Disable default modal animation */
+}
+.ant-modal-mask {
+  animation-duration: 0.1s !important; /* Disable default modal animation */
+}

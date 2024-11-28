@@ -1,0 +1,20 @@
+<section
+  class="md:container mx-auto py-10 lg:py-16 px-3 w-full flex flex-col gap-12 lg:gap-16 items-center text-center"
+>
+  <h1
+    class="text-xl md:text-2xl xl:text-3xl text-primary title-fade-in fade-in"
+  >
+    Certified and Trusted Medical Source
+  </h1>
+
+  <div
+    class="flex flex-wrap justify-center items-center gap-8 xl:gap-12 section-fade-in fade-in"
+  >
+    <img
+      *ngFor="let image of imageSources"
+      [src]="image"
+      alt=""
+      class="h-8 lg:h-10 opacity-60"
+    />
+  </div>
+</section>

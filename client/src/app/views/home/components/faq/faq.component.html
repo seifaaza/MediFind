@@ -1,0 +1,24 @@
+<section
+  class="md:container mx-auto py-10 lg:py-16 px-3 w-full flex flex-col gap-12 lg:gap-16 items-center"
+>
+  <h1
+    class="text-xl md:text-2xl xl:text-3xl text-primary title-fade-in fade-in"
+  >
+    Frequently Asked Questions
+  </h1>
+
+  <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+    <div
+      *ngFor="let faq of faqs; let i = index"
+      class="max-w-md md:max-w-lg fade-in"
+      #faqElement
+    >
+      <h3 class="text-base lg:text-lg text-slate-800">
+        {{ faq.question }}
+      </h3>
+      <p class="text-sm lg:text-base !leading-relaxed mt-2 text-slate-500">
+        {{ faq.answer }}
+      </p>
+    </div>
+  </div>
+</section>

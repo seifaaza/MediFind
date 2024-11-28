@@ -1,0 +1,63 @@
+<button
+  (click)="showModal()"
+  nz-button
+  nzType="link"
+  nzSize="large"
+  routerLinkActive="active"
+  class="px-6 md:px-12 lg:px-14 xl:px-16 py-8 !border-none flex items-center gap-2 !text-red-600 hover:bg-red-500/5 w-full"
+>
+  <span nz-icon nzType="delete" nzTheme="outline"></span>
+  <p class="hidden md:block">Deactivate</p>
+</button>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+  nzCloseOnNavigation="false"
+>
+  <ng-template #modalTitle
+    ><h1 class="text-lg text-slate-700">
+      Deactivate Your Account
+    </h1></ng-template
+  >
+
+  <ng-template #modalContent>
+    <p class="text-slate-600">
+      Are you sure you want to deactivate your account?
+    </p>
+    <p class="text-slate-600">
+      Deactivating will permanently delete all your data and cannot be undone.
+    </p>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <div class="flex gap-1 justify-end">
+      <button
+        (click)="handleCancel()"
+        nz-button
+        nzType="default"
+        nzSize="large"
+        class="text-primary border-primary flex items-center"
+      >
+        <span nz-icon nzType="close" nzTheme="outline"></span>
+        Cancel
+      </button>
+      <button
+        (click)="handleOk()"
+        nz-button
+        nzDanger
+        nzType="primary"
+        nzSize="large"
+        class="!border-none flex items-center"
+      >
+        <span nz-icon nzType="delete" nzTheme="outline"></span>
+
+        <span *ngIf="loading" nz-icon nzType="loading" nzTheme="outline"></span>
+        Deactivate
+      </button>
+    </div>
+  </ng-template>
+</nz-modal>
