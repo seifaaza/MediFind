@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BackHomeComponent } from '../../core/components/back-home/back-home.component';
+import { BackHomeComponent } from '../../core/components/buttons/back-home/back-home.component';
 
 @Component({
   selector: 'app-not-found',

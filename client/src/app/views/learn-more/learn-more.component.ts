@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AboutComponent } from './components/about/about.component';
 import { FeaturesComponent } from './components/features/features.component';
-import { BackHomeComponent } from '../../core/components/back-home/back-home.component';
+import { BackHomeComponent } from '../../core/components/buttons/back-home/back-home.component';
 
 @Component({
   selector: 'app-learn-more',
