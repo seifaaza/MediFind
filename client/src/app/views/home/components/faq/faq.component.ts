@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-faq',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NzIconModule],
   templateUrl: './faq.component.html',
   styleUrls: ['./faq.component.css'],
 })

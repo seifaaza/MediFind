@@ -12,7 +12,9 @@ html {
 body {
   @apply font-main bg-light;
 }
-
+p {
+  @apply !leading-[1.7];
+}
 .fade-in {
   opacity: 0;
   transform: translateY(8px); /* Slide up effect */
