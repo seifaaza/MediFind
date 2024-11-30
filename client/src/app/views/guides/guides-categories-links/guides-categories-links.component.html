@@ -1,0 +1,36 @@
+<section
+  class="md:max-w-4xl xl:max-w-6xl mx-auto py-10 px-4 w-full flex flex-col gap-12"
+>
+  <h1 class="text-xl md:text-2xl xl:text-3xl text-primary">
+    Navigate Your Collection of Health Topics
+  </h1>
+  <div class="grid lg:grid-cols-2 gap-y-8 lg:gap-y-12 gap-x-10">
+    <div
+      *ngFor="let category of categories"
+      class="flex gap-3 md:gap-4 xl:gap-6"
+    >
+      <img
+        [src]="'/guides-categories/' + category.icon"
+        class="h-36"
+        alt="{{ category.title }}"
+      />
+      <div class="grow">
+        <h1 class="text-slate-800 text-base lg:text-lg">
+          {{ category.title }}
+        </h1>
+        <p class="mt-2 text-sm lg:text-[.9rem] text-slate-500 max-w-xs">
+          {{ category.description }}
+        </p>
+        <button
+          [routerLink]="category.link"
+          nz-button
+          nzSize="large"
+          class="mt-3 flex items-center text-primary bg-transparent border-primary"
+        >
+          Learn More
+          <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
