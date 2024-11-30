@@ -18,7 +18,7 @@ export class GuidesCategoriesLinksComponent {
       description:
         'Understand how to manage and live well with chronic health conditions through education and lifestyle changes.',
       link: '/medicines',
-      icon: 'medicines-reatments.svg',
+      icon: 'medicines-treatments.svg',
     },
     {
       title: 'Preventive Care',
@@ -52,7 +52,7 @@ export class GuidesCategoriesLinksComponent {
       title: 'Addiction Recovery & Support',
       description:
         'Understand how to manage and live well with chronic health conditions through education and lifestyle changes.',
-      link: '/addiction-recovery',
+      link: '/addiction',
       icon: 'addiction-recovery.svg',
     },
   ];

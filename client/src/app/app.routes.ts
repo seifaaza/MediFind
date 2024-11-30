@@ -15,13 +15,18 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { AchievementsComponent } from './views/profile/profile-aside/achievements/achievements.component';
 import { TrackerComponent } from './views/profile/profile-aside/tracker/tracker.component';
 import { ProfileInfoComponent } from './views/profile/profile-aside/profile-info/profile-info.component';
+import { MedicinesGuideComponent } from './views/guides/categories/medicines-guide/medicines-guide.component';
+import { PreventiveCareGuideComponent } from './views/guides/categories/preventive-care-guide/preventive-care-guide.component';
+import { NutritionGuideComponent } from './views/guides/categories/nutrition-guide/nutrition-guide.component';
+import { FitnessGuideComponent } from './views/guides/categories/fitness-guide/fitness-guide.component';
+import { MentalWellBeingGuideComponent } from './views/guides/categories/mental-well-being-guide/mental-well-being-guide.component';
+import { AddictionGuideComponent } from './views/guides/categories/addiction-guide/addiction-guide.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'learn-more', component: LearnMoreComponent },
   { path: 'medicines', component: MedicinesComponent },
   { path: 'community', component: CommunityComponent },
-  { path: 'guides', component: GuidesComponent },
   { path: 'events', component: EventsComponent },
   {
     path: 'auth',
@@ -39,6 +44,18 @@ export const routes: Routes = [
       { path: '', component: ProfileInfoComponent },
       { path: 'achievements', component: AchievementsComponent },
       { path: 'tracker', component: TrackerComponent },
+    ],
+  },
+  {
+    path: 'guides',
+    children: [
+      { path: '', component: GuidesComponent },
+      { path: 'medicines', component: MedicinesGuideComponent },
+      { path: 'preventive-care', component: PreventiveCareGuideComponent },
+      { path: 'nutrition', component: NutritionGuideComponent },
+      { path: 'fitness', component: FitnessGuideComponent },
+      { path: 'mental-well-being', component: MentalWellBeingGuideComponent },
+      { path: 'addiction', component: AddictionGuideComponent },
     ],
   },
   { path: 'create-profile', component: CreateProfileComponent },
