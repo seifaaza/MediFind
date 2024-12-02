@@ -15,6 +15,10 @@ body {
 p {
   @apply !leading-[1.7];
 }
+svg,
+img {
+  user-select: none;
+}
 .fade-in {
   opacity: 0;
   transform: translateY(8px); /* Slide up effect */

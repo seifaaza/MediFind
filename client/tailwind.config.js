@@ -5,9 +5,7 @@ module.exports = {
       colors: {
         light: "#e9f6ff",
         primary: "#0894ff",
-        secondary: "#009bff",
-        tertiary: "#1289ff",
-        quaternary: "#b6e11d",
+        secondary: "#1285f8",
       },
       fontFamily: {
         main: ["Kodchasan", "sans-serif"],

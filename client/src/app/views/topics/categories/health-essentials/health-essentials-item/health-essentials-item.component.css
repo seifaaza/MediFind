@@ -1,0 +1,19 @@
+.content {
+  @apply mt-3;
+}
+
+::ng-deep .content p {
+  @apply text-base text-slate-600 mt-1;
+}
+
+::ng-deep .content h4 {
+  @apply mt-4 ml-4 mb-1 text-lg lg:text-[1.2rem] text-primary;
+}
+
+::ng-deep .content ul {
+  @apply text-base mt-2 mb-3 text-slate-500 pl-8 list-disc;
+}
+
+::ng-deep .content a {
+  @apply underline text-slate-500 hover:text-slate-900;
+}

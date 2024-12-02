@@ -9,18 +9,19 @@ import { CreateProfileComponent } from './views/profile/create-profile/create-pr
 import { ProfileComponent } from './views/profile/profile.component';
 import { MedicinesComponent } from './views/medicines/medicines.component';
 import { CommunityComponent } from './views/community/community.component';
-import { GuidesComponent } from './views/guides/guides.component';
 import { EventsComponent } from './views/events/events.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AchievementsComponent } from './views/profile/profile-aside/achievements/achievements.component';
 import { TrackerComponent } from './views/profile/profile-aside/tracker/tracker.component';
 import { ProfileInfoComponent } from './views/profile/profile-aside/profile-info/profile-info.component';
-import { MedicinesGuideComponent } from './views/guides/categories/medicines-guide/medicines-guide.component';
-import { PreventiveCareGuideComponent } from './views/guides/categories/preventive-care-guide/preventive-care-guide.component';
-import { NutritionGuideComponent } from './views/guides/categories/nutrition-guide/nutrition-guide.component';
-import { FitnessGuideComponent } from './views/guides/categories/fitness-guide/fitness-guide.component';
-import { MentalWellBeingGuideComponent } from './views/guides/categories/mental-well-being-guide/mental-well-being-guide.component';
-import { AddictionGuideComponent } from './views/guides/categories/addiction-guide/addiction-guide.component';
+import { TopicsComponent } from './views/topics/topics.component';
+import { HealthEssentialsComponent } from './views/topics/categories/health-essentials/health-essentials.component';
+import { PreventiveCareComponent } from './views/topics/categories/preventive-care/preventive-care.component';
+import { NutritionComponent } from './views/topics/categories/nutrition/nutrition.component';
+import { FitnessComponent } from './views/topics/categories/fitness/fitness.component';
+import { MentalWellBeingComponent } from './views/topics/categories/mental-well-being/mental-well-being.component';
+import { AddictionComponent } from './views/topics/categories/addiction/addiction.component';
+import { HealthEssentialsItemComponent } from './views/topics/categories/health-essentials/health-essentials-item/health-essentials-item.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -47,15 +48,19 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'guides',
+    path: 'topics',
     children: [
-      { path: '', component: GuidesComponent },
-      { path: 'medicines', component: MedicinesGuideComponent },
-      { path: 'preventive-care', component: PreventiveCareGuideComponent },
-      { path: 'nutrition', component: NutritionGuideComponent },
-      { path: 'fitness', component: FitnessGuideComponent },
-      { path: 'mental-well-being', component: MentalWellBeingGuideComponent },
-      { path: 'addiction', component: AddictionGuideComponent },
+      { path: '', component: TopicsComponent },
+      { path: 'health-essentials', component: HealthEssentialsComponent },
+      {
+        path: 'health-essentials/:id',
+        component: HealthEssentialsItemComponent,
+      },
+      { path: 'preventive-care', component: PreventiveCareComponent },
+      { path: 'nutrition', component: NutritionComponent },
+      { path: 'fitness', component: FitnessComponent },
+      { path: 'mental-well-being', component: MentalWellBeingComponent },
+      { path: 'addiction', component: AddictionComponent },
     ],
   },
   { path: 'create-profile', component: CreateProfileComponent },

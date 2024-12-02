@@ -32,7 +32,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   links = [
     { label: 'Medicines', icon: 'medicine-box', route: '/medicines' },
     { label: 'Community', icon: 'message', route: '/community' },
-    { label: 'Guides', icon: 'book', route: '/guides' },
+    { label: 'Topics', icon: 'book', route: '/topics' },
     { label: 'Events', icon: 'calendar', route: '/events' },
   ];
 

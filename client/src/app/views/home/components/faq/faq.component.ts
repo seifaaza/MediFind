@@ -29,7 +29,7 @@ export class FaqComponent implements AfterViewInit, OnDestroy {
     {
       question: 'How does MediFind educate users?',
       answer:
-        'MediFind provides articles, guides, and videos on health, treatments, and wellness tips.',
+        'MediFind provides articles, topics, and videos on health, treatments, and wellness tips.',
     },
   ];
 

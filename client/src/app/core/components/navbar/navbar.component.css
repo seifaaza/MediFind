@@ -1,5 +1,5 @@
 .active {
-  @apply bg-tertiary;
+  @apply bg-secondary;
 }
 
 .navbar-header {
