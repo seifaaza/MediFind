@@ -35,6 +35,8 @@ export class SignUpComponent {
   signUpForm: FormGroup;
   loading = false;
   errorMessage = '';
+  passwordVisible = false;
+  password?: string;
 
   constructor(
     private authService: AuthService,

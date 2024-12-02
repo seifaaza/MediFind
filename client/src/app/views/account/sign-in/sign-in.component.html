@@ -16,6 +16,104 @@
     </div>
 
     <div class="my-6">
+      <form
+        [formGroup]="signInForm"
+        (ngSubmit)="onSubmit()"
+        class="flex flex-col gap-2"
+      >
+        <!-- Username Field -->
+        <div class="flex flex-col gap-3">
+          <label for="username" class="text-slate-600 text-sm lg:text-base"
+            >Username</label
+          >
+          <input
+            id="username"
+            nz-input
+            placeholder="Type your username"
+            nzSize="large"
+            formControlName="username"
+            class="text-base text-slate-600"
+          />
+          <p
+            *ngIf="
+              signInForm.get('username')?.invalid &&
+              signInForm.get('username')?.touched
+            "
+            class="text-red-500 text-sm"
+          >
+            Username is required.
+          </p>
+        </div>
+
+        <!-- Password Field -->
+        <div class="flex flex-col gap-3">
+          <label for="password" class="text-slate-600 text-sm lg:text-base"
+            >Password</label
+          >
+          <nz-input-group [nzSuffix]="suffixTemplate">
+            <input
+              id="password"
+              formControlName="password"
+              [type]="passwordVisible ? 'text' : 'password'"
+              nz-input
+              placeholder="Enter your password"
+              [(ngModel)]="password"
+              class="!text-base text-slate-600"
+            />
+          </nz-input-group>
+          <ng-template #suffixTemplate>
+            <span
+              nz-icon
+              class="ant-input-password-icon text-base"
+              [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+              (click)="passwordVisible = !passwordVisible"
+            ></span>
+          </ng-template>
+          <p
+            *ngIf="
+              signInForm.get('password')?.invalid &&
+              signInForm.get('password')?.touched
+            "
+            class="text-red-500 text-sm"
+          >
+            Password is required.
+          </p>
+        </div>
+        <!-- Error Message -->
+        <p class="text-red-500 text-center">
+          {{ errorMessage }}
+        </p>
+
+        <!-- Submit Button -->
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="large"
+          class="flex justify-center items-center mt-1"
+          [disabled]="signInForm.invalid || loading"
+        >
+          Sign In
+          <span
+            *ngIf="!loading"
+            nz-icon
+            nzType="arrow-right"
+            nzTheme="outline"
+          ></span>
+          <span
+            *ngIf="loading"
+            nz-icon
+            nzType="loading"
+            nzTheme="outline"
+          ></span>
+        </button>
+      </form>
+
+      <div
+        class="py-4 lg:py-8 2xl:py-12 flex items-center text-xs text-slate-400 uppercase before:flex-1 before:border-t before:border-slate-300 before:me-6 after:flex-1 after:border-t after:border-slate-300 after:ms-6"
+      >
+        Or
+      </div>
+
       <button
         (click)="signInWithGoogle()"
         nz-button
@@ -49,94 +147,6 @@
         </svg>
         Sign in with Google
       </button>
-
-      <div
-        class="py-4 flex items-center text-xs text-slate-400 uppercase before:flex-1 before:border-t before:border-slate-300 before:me-6 after:flex-1 after:border-t after:border-slate-300 after:ms-6"
-      >
-        Or
-      </div>
-
-      <!-- Form -->
-      <form
-        [formGroup]="signInForm"
-        (ngSubmit)="onSubmit()"
-        class="flex flex-col gap-4"
-      >
-        <!-- Username Field -->
-        <div class="flex flex-col gap-3">
-          <label for="username" class="text-slate-600 text-sm lg:text-base"
-            >Username</label
-          >
-          <input
-            id="username"
-            nz-input
-            placeholder="Type your username"
-            nzSize="large"
-            formControlName="username"
-          />
-          <p
-            *ngIf="
-              signInForm.get('username')?.invalid &&
-              signInForm.get('username')?.touched
-            "
-            class="text-red-500 text-sm"
-          >
-            Username is required.
-          </p>
-        </div>
-
-        <!-- Password Field -->
-        <div class="flex flex-col gap-3">
-          <label for="password" class="text-slate-600 text-sm lg:text-base"
-            >Password</label
-          >
-          <input
-            id="password"
-            nz-input
-            placeholder="Enter your password"
-            nzSize="large"
-            type="password"
-            formControlName="password"
-          />
-          <p
-            *ngIf="
-              signInForm.get('password')?.invalid &&
-              signInForm.get('password')?.touched
-            "
-            class="text-red-500 text-sm"
-          >
-            Password is required.
-          </p>
-        </div>
-        <!-- Error Message -->
-        <p class="text-red-500 text-center">
-          {{ errorMessage }}
-        </p>
-
-        <!-- Submit Button -->
-        <button
-          nz-button
-          nzType="primary"
-          nzSize="large"
-          class="flex justify-center items-center mt-2"
-          [disabled]="signInForm.invalid || loading"
-        >
-          Sign In
-          <span
-            *ngIf="!loading"
-            nz-icon
-            nzType="arrow-right"
-            nzTheme="outline"
-          ></span>
-          <span
-            *ngIf="loading"
-            nz-icon
-            nzType="loading"
-            nzTheme="outline"
-          ></span>
-        </button>
-      </form>
-      <!-- End Form -->
     </div>
   </div>
 </section>

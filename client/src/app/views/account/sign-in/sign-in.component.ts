@@ -35,6 +35,8 @@ export class SignInComponent {
   loading = false;
   errorMessage = '';
   apiUrl = environment.API_URL;
+  passwordVisible = false;
+  password?: string;
 
   constructor(
     private authService: AuthService,
