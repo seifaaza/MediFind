@@ -5,24 +5,280 @@
     Navigate Your Collection of Health Topics
   </h1>
   <div class="grid lg:grid-cols-2 gap-y-10 lg:gap-y-12 gap-x-10">
-    <div
-      *ngFor="let category of categories"
-      class="flex gap-3 md:gap-4 xl:gap-6"
-    >
-      <img
-        [src]="'/topics-categories/' + category.icon"
+    <div class="flex gap-3 md:gap-4 xl:gap-6">
+      <svg
         class="h-32"
-        alt="{{ category.title }}"
-      />
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 430 430"
+      >
+        <g
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-miterlimit="14"
+          stroke-width="4"
+        >
+          <path
+            stroke="#0894ff"
+            d="M45.25 190h69.655l21.284 60 34.054-120 21.284 60h47.946l21.284 60 34.054-120 21.284 60h68.564"
+          />
+          <path
+            stroke="#64748b"
+            d="M359.9 230c20-20 30-46.2 30-72.4s-10-52.4-30-72.4c-17-17.2-38.6-26.9-60.9-29.4-29.9-3.4-61 6.4-83.9 29.4l-.1.1-.1-.1c-20-20-46.2-30-72.4-30s-52.4 10-72.4 30C30 125.1 30 190 70 230l145 145z"
+          />
+        </g>
+      </svg>
       <div class="grow">
-        <h1 class="text-slate-800 text-base lg:text-lg">
-          {{ category.title }}
-        </h1>
+        <h1 class="text-slate-800 text-base lg:text-lg">Health Essentials</h1>
         <p class="mt-1 text-sm lg:text-[.9rem] text-slate-500 max-w-xs">
-          {{ category.description }}
+          Explore general health knowledge, from common diseases to practical
+          tips for a healthy lifestyle.
         </p>
         <button
-          [routerLink]="'/topics/' + category.link"
+          [routerLink]="'/topics/health-essentials'"
+          nz-button
+          nzSize="large"
+          class="mt-4 flex items-center text-primary hover:text-white bg-transparent hover:bg-primary border-primary"
+        >
+          Explore
+          <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex gap-3 md:gap-4 xl:gap-6">
+      <svg
+        class="h-32"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 430 430"
+      >
+        <g
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-miterlimit="10"
+          stroke-width="4"
+        >
+          <path
+            stroke="#64748b"
+            d="M85 120H50c-16.568 0-30 13.431-30 30v50c0 46.064 36.642 83.57 82.369 84.96M345 120h35c16.569 0 30 13.431 30 30v50c0 46.064-36.641 83.57-82.368 84.96"
+          />
+          <path
+            stroke="#0894ff"
+            d="m85 120 130-40 130 40v100c0 71.797-58.203 130-130 130S85 291.797 85 220z"
+          />
+          <path
+            stroke="#0894ff"
+            d="M343.394 240.494 215 280 86.606 240.494M85 195l130-40 130 40"
+          />
+        </g>
+      </svg>
+      <div class="grow">
+        <h1 class="text-slate-800 text-base lg:text-lg">Preventive Care</h1>
+        <p class="mt-1 text-sm lg:text-[.9rem] text-slate-500 max-w-xs">
+          Learn about essential health screenings, vaccinations, and everyday
+          habits that help prevent illnesses and promote longevity.
+        </p>
+        <button
+          [routerLink]="'/topics/preventive-care'"
+          nz-button
+          nzSize="large"
+          class="mt-4 flex items-center text-primary hover:text-white bg-transparent hover:bg-primary border-primary"
+        >
+          Explore
+          <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+        </button>
+      </div>
+    </div>
+    <div class="flex gap-3 md:gap-4 xl:gap-6">
+      <svg
+        class="h-32"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 430 430"
+      >
+        <g
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-miterlimit="10"
+          stroke-width="4"
+        >
+          <path
+            stroke="#0894ff"
+            d="M193.72 76.63c15.52 7.85 25.24 22.09 26.39 36.31-12.14 7.5-29.36 8.13-44.89.27-15.54-7.86-25.24-22.1-26.4-36.32 12.15-7.5 29.37-8.11 44.9-.26"
+          />
+          <path
+            stroke="#64748b"
+            d="M214.92 158.11c-.91-2.28-8.67-22.74 3.26-42.22 9.09-14.84 26.1-23.39 44-22.18"
+          />
+          <path
+            stroke="#64748b"
+            d="M347.86 242.86c0 24.85-7.36 49.99-20.77 71.18-13.56 21.44-34.44 43.99-61.67 43.99-7.96 0-15.52-1.78-22.28-4.96-1.89-1.2-3.86-2.29-5.9-3.24-6.77-3.19-14.33-4.97-22.31-4.97-7.92 0-15.42 1.75-22.16 4.9a53 53 0 0 0-6.16 3.38 52.2 52.2 0 0 1-22.13 4.89c-25.28 0-45.4-20.01-59-39.7C90.22 296.23 82 269.71 82 242.86c0-42.18 21.91-100.6 71.98-100.6 5.28 0 10.4.69 15.27 1.99 4.88 1.3 8.28 2.87 9.69 3.5 9.74 4.38 23.5 10.57 36.98 10.36 13.01-.19 26.41-6.35 34.66-10.14 1.36-.62 4.48-2.1 8.97-3.4 0 0 8.05-2.31 16.46-2.31 49.7 0 71.85 58.98 71.85 100.6"
+          />
+          <path
+            stroke="#64748b"
+            d="M151.93 178.77c-4.88 2.92-14.49 9.58-21.5 21.87-9.14 16.02-8.12 31.51-7.5 37"
+          />
+        </g>
+      </svg>
+      <div class="grow">
+        <h1 class="text-slate-800 text-base lg:text-lg">
+          Nutrition & Healthy Eating
+        </h1>
+        <p class="mt-1 text-sm lg:text-[.9rem] text-slate-500 max-w-xs">
+          Discover tips for balanced diets, healthy recipes, and how nutrition
+          impacts your overall health and well-being.
+        </p>
+        <button
+          [routerLink]="'/topics/nutrition'"
+          nz-button
+          nzSize="large"
+          class="mt-4 flex items-center text-primary hover:text-white bg-transparent hover:bg-primary border-primary"
+        >
+          Explore
+          <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+        </button>
+      </div>
+    </div>
+    <div class="flex gap-3 md:gap-4 xl:gap-6">
+      <svg
+        class="h-32"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 430 430"
+      >
+        <g
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-miterlimit="10"
+          stroke-width="4"
+        >
+          <path
+            stroke="#64748b"
+            d="m133.2 172.799 20.4 51.7 9.6 24.2m28.4 72.001-8-20.2"
+          />
+          <path
+            stroke="#64748b"
+            d="m180.7 219.8-26.4 3.5-.7 1.2-19.3 35.2-33.5 61h90.8L289 205.4l-65.1 8.6m51.9-136.5 8.7 13.9c1.7 2.8 5.4 3.6 8.2 1.9l23.2-14.5c9.3-5.8 12.2-18.1 6.4-27.4l-1.3-2.1c-5.8-9.3-18.1-12.2-27.4-6.4L282.2 50c-9.3 5.9-12.2 18.2-6.4 27.5"
+          />
+          <path
+            stroke="#64748b"
+            d="M100.7 390.599c38.494 0 69.7-31.206 69.7-69.7s-31.206-69.7-69.7-69.7-69.7 31.206-69.7 69.7 31.206 69.7 69.7 69.7"
+          />
+          <path
+            stroke="#64748b"
+            d="M57.2 320.9c0 24.1 19.5 43.6 43.6 43.6m185.4-43.6c0 24.1 19.5 43.6 43.6 43.6"
+          />
+          <path
+            stroke="#64748b"
+            d="M329.7 390.599c38.494 0 69.7-31.206 69.7-69.7s-31.206-69.7-69.7-69.7-69.7 31.206-69.7 69.7 31.206 69.7 69.7 69.7M310 187.6h7.3c8.7 10.4-.8 24-.8 24"
+          />
+          <path
+            stroke="#64748b"
+            d="m286.3 197.799 2.7 7.6 17.5 49.7 23.2 65.8m-181.8-148.1h-38.7m80.7-10.999 28 38.8c7.6 7.5 8.1 19.6 1.1 27.6L190 273s10.3 25.8-2 31.2l-38.5-33.1L183 216l-34-49c-1-2.1-11.2-23.1-.2-42.1 4.5-7.7 10.7-12.1 14.7-14.4"
+          />
+          <path
+            stroke="#0894ff"
+            d="M265.2 97.3c-.5-1.8-1.2-3.6-2.1-5.3-4.8-9.4-14-15-23.9-15.7-.3 0-6.6-.6-14.9 3.1l-60.7 31 26.3 51.3.1-.1 54.3-27.8"
+          />
+          <path
+            stroke="#0894ff"
+            d="m265.2 97.299 11 45.7 33.9 44.6s-12 18.9-30.1 7.2l-30-39.6-15.2-55.8"
+          />
+        </g>
+      </svg>
+      <div class="grow">
+        <h1 class="text-slate-800 text-base lg:text-lg">
+          Fitness & Physical Health
+        </h1>
+        <p class="mt-1 text-sm lg:text-[.9rem] text-slate-500 max-w-xs">
+          Get tips and guidance on maintaining physical fitness through
+          exercise, movement, and strength training.
+        </p>
+        <button
+          [routerLink]="'/topics/fitness'"
+          nz-button
+          nzSize="large"
+          class="mt-4 flex items-center text-primary hover:text-white bg-transparent hover:bg-primary border-primary"
+        >
+          Explore
+          <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+        </button>
+      </div>
+    </div>
+    <div class="flex gap-3 md:gap-4 xl:gap-6">
+      <svg
+        class="h-32"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 430 430"
+      >
+        <g
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-miterlimit="6"
+          stroke-width="4"
+        >
+          <path
+            stroke="#64748b"
+            d="M214.4 298.2c-17.6 28-49.4 47.5-86.8 49.5-38 2-72.3-14.6-92.6-41.3 12.9-21.3 34-37.9 59.5-45.9m241.4-.1c25.6 8 46.7 24.6 59.6 45.9-20.3 26.7-54.6 43.3-92.6 41.3-37.3-2-69.2-21.6-86.8-49.5"
+          />
+          <path
+            stroke="#0894ff"
+            d="M217.4 297.3c36.3 9.9 76.6 1.9 106.8-24.9q6.45-5.7 11.7-12c22.3-26.3 31-60.7 25.6-93.3-28.8-8.4-60.3-5.5-87.5 9.2m-117.6.1c-27.1-14.7-58.7-17.7-87.5-9.2-5.4 32.6 3.3 66.9 25.6 93.3q5.25 6.3 11.7 12c30.2 26.8 70.6 34.8 106.8 24.9"
+          />
+          <path
+            stroke="#64748b"
+            d="M274.1 176.4c-4.5-39.4-26.9-73.3-58.9-93.4-32 20.1-54.4 54-58.9 93.4-.5 4.8-.8 9.6-.8 14.5 0 29.2 9.8 56.1 26.4 77.6 8.7 11.3 19.2 21 31.1 28.9.4.3.8.6 1.3.8l.9.6.9-.6c.4-.3.9-.5 1.3-.8 11.9-7.8 22.5-17.6 31.1-28.9 16.5-21.5 26.4-48.4 26.4-77.6 0-4.9-.3-9.8-.8-14.5"
+          />
+        </g>
+      </svg>
+      <div class="grow">
+        <h1 class="text-slate-800 text-base lg:text-lg">Mental Well-being</h1>
+        <p class="mt-1 text-sm lg:text-[.9rem] text-slate-500 max-w-xs">
+          Explore strategies for managing stress, anxiety, and maintaining
+          emotional balance to support your mental health.
+        </p>
+        <button
+          [routerLink]="'/topics/mental-well-being'"
+          nz-button
+          nzSize="large"
+          class="mt-4 flex items-center text-primary hover:text-white bg-transparent hover:bg-primary border-primary"
+        >
+          Explore
+          <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+        </button>
+      </div>
+    </div>
+    <div class="flex gap-3 md:gap-4 xl:gap-6">
+      <svg
+        class="h-32"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 430 430"
+      >
+        <g stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+          <path
+            stroke="#0894ff"
+            d="m118.87 158.69-8.65-8.96c-6.17-6.39-6-16.58.4-22.75l17.91-17.3c6.39-6.17 16.58-6 22.75.4l8.65 8.96m118.05 204.42-30.23-31.31m41.07-39.65 30.23 31.31M70 67l49.57 51.33m157.08 206.42 43.74-42.24c10.6-10.24 27.5-9.94 37.73.66l1.29 1.34-82.13 79.31-1.29-1.34c-10.24-10.59-9.95-27.49.66-37.73"
+          />
+          <path
+            stroke="#64748b"
+            d="m171.15 151.2 20.53-19.83m.95 42.07 20.53-19.83m.95 42.07 20.53-19.83m.95 42.08 20.53-19.83m.95 42.07 20.53-19.83m21.48 22.25-61.6 59.49L108.6 168.61l61.6-59.49z"
+          />
+        </g>
+      </svg>
+
+      <div class="grow">
+        <h1 class="text-slate-800 text-base lg:text-lg">
+          Addiction Recovery & Support
+        </h1>
+        <p class="mt-1 text-sm lg:text-[.9rem] text-slate-500 max-w-xs">
+          Understand how to manage and live well with chronic health conditions
+          through education and lifestyle changes.
+        </p>
+        <button
+          [routerLink]="'/topics/addiction'"
           nz-button
           nzSize="large"
           class="mt-4 flex items-center text-primary hover:text-white bg-transparent hover:bg-primary border-primary"

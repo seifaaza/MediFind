@@ -13,7 +13,7 @@ body {
   @apply font-main bg-light;
 }
 p {
-  @apply !leading-[1.7];
+  @apply !leading-[1.75];
 }
 svg,
 img {

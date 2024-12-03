@@ -49,5 +49,11 @@ export class AppComponent {
         // Set navbar and footer visibility accordingly
         this.showNavbarAndFooter = !isErrorOrNotFound;
       });
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        // Scroll to the top of the page
+        window.scrollTo(0, 0);
+      }
+    });
   }
 }
