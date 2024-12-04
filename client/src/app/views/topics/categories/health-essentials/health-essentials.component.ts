@@ -45,8 +45,7 @@ export class HealthEssentialsComponent implements OnInit {
         }
         this.loading = false; // Stop loading after success
       },
-      error: (error) => {
-        console.error('Error fetching API:', error);
+      error: () => {
         this.loading = false; // Stop loading even if there's an error
 
         // Redirect to the server-error page

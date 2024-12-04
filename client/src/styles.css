@@ -35,8 +35,19 @@ img {
 }
 
 .ant-modal {
-  animation-duration: 0s !important; /* Disable default modal animation */
+  @apply !w-fit !max-w-3xl mx-2;
+  animation-delay: -1s;
 }
-.ant-modal-mask {
-  animation-duration: 0.1s !important; /* Disable default modal animation */
+
+::ng-deep .ant-modal-wrap,
+.ant-modal {
+  animation: none !important; /* Disable default modal animation */
+}
+
+::ng-deep .ant-modal {
+  transition: none !important; /* Remove transition for the modal */
+}
+
+::ng-deep .ant-modal-content {
+  animation: none !important; /* Disable content animation */
 }

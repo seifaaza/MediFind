@@ -28,6 +28,9 @@ export class DeactivateAccountComponent {
   showModal(): void {
     this.isVisible = true;
   }
+  handleCancel(): void {
+    this.isVisible = false;
+  }
 
   handleOk(): void {
     this.loading = true;
@@ -51,9 +54,5 @@ export class DeactivateAccountComponent {
         this.isVisible = false; // Close the modal
       },
     });
-  }
-
-  handleCancel(): void {
-    this.isVisible = false;
   }
 }
