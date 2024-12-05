@@ -12,19 +12,14 @@
 
 <nz-modal
   [(nzVisible)]="isVisible"
-  [nzTitle]="modalTitle"
   [nzContent]="modalContent"
   [nzFooter]="modalFooter"
   (nzOnCancel)="handleCancel()"
   nzCloseOnNavigation="false"
+  nzCentered
 >
-  <ng-template #modalTitle
-    ><h1 class="text-lg text-slate-700">
-      Deactivate Your Account
-    </h1></ng-template
-  >
-
   <ng-template #modalContent>
+    <h1 class="text-lg text-slate-700 mb-4">Deactivate Your Account</h1>
     <p class="text-slate-600">
       Are you sure you want to deactivate your account?
     </p>
@@ -40,7 +35,7 @@
         nz-button
         nzType="default"
         nzSize="large"
-        class="text-primary border-primary flex items-center"
+        class="flex items-center text-primary hover:text-white bg-transparent hover:bg-primary border-primary"
       >
         <span nz-icon nzType="close" nzTheme="outline"></span>
         Cancel

@@ -119,19 +119,68 @@
         class="grow lg:h-[52px] lg:!flex flex-col lg:flex-row lg:justify-end lg:items-center my-4 lg:my-0"
       >
         <ng-container *ngFor="let link of links">
-          <button
-            [routerLink]="link.route"
-            (click)="closeMenu()"
-            nz-button
-            nzType="link"
-            nzSize="large"
-            routerLinkActive="active"
-            [ngClass]="{ 'hover:after:w-full': !isNotHome }"
-            class="!border-none flex items-center !text-white hover:bg-secondary relative after:absolute after:h-[1px] after:w-0 after:bg-white after:bottom-0 after:left-0 after:rounded-sm hover:after:w-full after:duration-300"
-          >
-            <span nz-icon [nzType]="link.icon" nzTheme="outline"></span>
-            {{ link.label }}
-          </button>
+          <ng-container *ngIf="link.dropdownItems; else regularLink">
+            <a
+              [routerLink]="link.route"
+              routerLinkActive="active"
+              nz-dropdown
+              [nzDropdownMenu]="dropdown"
+              [nzPlacement]="'bottomCenter'"
+            >
+              <button
+                nz-button
+                nzType="link"
+                nzSize="large"
+                class="!border-none flex items-center !text-white hover:bg-secondary relative"
+              >
+                <span nz-icon [nzType]="link.icon" nzTheme="outline"></span>
+                {{ link.label }}
+                <span nz-icon nzType="down" class="text-sm"></span>
+              </button>
+            </a>
+            <nz-dropdown-menu #dropdown="nzDropdownMenu">
+              <ul
+                nz-menu
+                nzSelectable
+                [ngClass]="{ 'grid md:grid-cols-2': link.label === 'Topics' }"
+                class="dropdown-content"
+              >
+                <li
+                  *ngFor="let item of link.dropdownItems"
+                  (click)="
+                    item.fragment
+                      ? navigateWithFragment(item.route, item.fragment)
+                      : navigateWithoutFragment(item.route)
+                  "
+                  nz-menu-item
+                  class="block py-4 px-5 text-[.9rem] hover:text-primary hover:bg-primary/10 duration-0"
+                >
+                  <span
+                    nz-icon
+                    [nzType]="item.icon"
+                    nzTheme="outline"
+                    class="mr-2"
+                    [ngClass]="{ 'text-base': link.label === 'Topics' }"
+                  ></span>
+                  {{ item.label }}
+                </li>
+              </ul>
+            </nz-dropdown-menu>
+          </ng-container>
+          <ng-template #regularLink>
+            <button
+              [routerLink]="link.route"
+              (click)="closeMenu()"
+              nz-button
+              nzType="link"
+              nzSize="large"
+              routerLinkActive="active"
+              class="!border-none flex items-center !text-white hover:bg-secondary relative"
+            >
+              <span nz-icon [nzType]="link.icon" nzTheme="outline"></span>
+              {{ link.label }}
+            </button>
+          </ng-template>
         </ng-container>
 
         <span

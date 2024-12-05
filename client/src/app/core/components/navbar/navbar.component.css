@@ -19,3 +19,13 @@
     transform: translateY(0);
   }
 }
+
+.menu-item-active {
+  @apply bg-primary/10 text-primary !important;
+}
+.ant-dropdown-menu-item-selected {
+  @apply text-slate-700 bg-transparent !important;
+}
+.ant-dropdown-menu-item-selected {
+  @apply hover:bg-primary/10 hover:text-primary !important;
+}
