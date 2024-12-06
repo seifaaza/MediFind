@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { EmptyDataComponent } from '../../../../core/errors/empty-data/empty-data.component';
 
 @Component({
   selector: 'app-health-essentials',
@@ -16,6 +17,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     NzIconModule,
     NzButtonModule,
     RouterModule,
+    EmptyDataComponent,
   ],
   templateUrl: './health-essentials.component.html',
   styleUrls: ['./health-essentials.component.css'],

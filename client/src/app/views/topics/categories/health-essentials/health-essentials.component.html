@@ -28,6 +28,10 @@
       </div>
     </div>
 
+    <!-- Error / Empty Data Message -->
+    <app-empty-data
+      *ngIf="!loading && displayedItems.length === 0"
+    ></app-empty-data>
     <!-- Data Grid -->
     <div
       *ngIf="!loading"
