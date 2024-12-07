@@ -11,6 +11,7 @@ from api.profile import profile_router
 from api.newsletter.newsletter import newsletter_router
 from api.newsletter.auth_newsletter import auth_newsletter_router
 from api.community.post import post_router
+from api.community.comment import comment_router
 
 # Load environment variables from .env file
 load_dotenv()
@@ -48,6 +49,7 @@ app.include_router(profile_router, prefix="/profile")
 app.include_router(newsletter_router, prefix="/newsletter")
 app.include_router(auth_newsletter_router, prefix="/auth/newsletter")
 app.include_router(post_router, prefix="/post")
+app.include_router(comment_router, prefix="/comment")
 
 @app.get("/routes")
 def show_routes():

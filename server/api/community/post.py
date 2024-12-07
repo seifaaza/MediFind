@@ -20,12 +20,6 @@ class PostCreateRequest(BaseModel):
     class Config:
         orm_mode = True
 
-# Schema for metadata and response
-class Meta(BaseModel):
-    total_items: int
-    category: Optional[int]
-    skip: int
-    limit: int
 
 # Endpoint to create a new post
 @post_router.post("/", status_code=status.HTTP_201_CREATED)
@@ -57,6 +51,13 @@ def create_post(
     # Return success message
     return {"message": "Post created successfully"}
 
+# Define the Meta model for pagination metadata
+class Meta(BaseModel):
+    total_items: int
+    skip: int
+    limit: int
+
+# Define the PostResponse model
 class PostResponse(BaseModel):
     id: int
     title: str
@@ -65,10 +66,11 @@ class PostResponse(BaseModel):
     category: str
     author_id: int
     author_username: str
-    num_comments: int 
+    num_comments: Optional[int] = 0  # Set default value to 0
 
+# Define the PaginatedResponse model
 class PaginatedResponse(BaseModel):
-    meta: Meta
+    meta: Meta  # This expects a Meta instance
     data: List[PostResponse]
 
 # Endpoint to get posts by category or all posts if no category is provided
@@ -135,36 +137,23 @@ def get_posts(
             category=post.category,
             author_id=post.author_id,
             author_username=post.author_username,
-            num_comments=post.num_comments,  # Include the number of comments
+            num_comments=post.num_comments if post.num_comments is not None else 0  # Handle None case
         )
         for post in posts
     ]
 
-    # Construct the response
+    # Build paginated response
     return PaginatedResponse(
-        meta=Meta(
-            total_items=total_items,
-            category=category,
-            skip=skip,
-            limit=limit,
-        ),
-        data=serialized_posts,
+        meta=Meta(total_items=total_items, skip=skip, limit=limit),  # Create a Meta instance
+        data=serialized_posts
     )
 
-class CommentResponse(BaseModel):
-    content: str
-    created_at: datetime
-    author_username: str
-
-class PostWithCommentsResponse(PostResponse):
-    comments: List[CommentResponse]
-
-@post_router.get("/{post_id}", response_model=PostWithCommentsResponse)
+@post_router.get("/{post_id}")
 def get_post(
     post_id: int,
     db: Session = Depends(get_db),
 ):
-    # Query to fetch the post details
+    # Query to fetch the post details without comments and num_comments
     post = (
         db.query(
             models.Post.id,
@@ -174,21 +163,10 @@ def get_post(
             models.Category.name.label("category"),
             models.User.id.label("author_id"),
             models.User.username.label("author_username"),
-            func.count(models.Comment.id).label("num_comments"),  # Count comments
         )
         .join(models.Category, models.Post.category_id == models.Category.id)
         .join(models.User, models.Post.user_id == models.User.id)
-        .outerjoin(models.Comment, models.Comment.post_id == models.Post.id)  # Outer join for comments
         .filter(models.Post.id == post_id)
-        .group_by(
-            models.Post.id,
-            models.Post.title,
-            models.Post.content,
-            models.Post.created_at,
-            models.Category.name,
-            models.User.id,
-            models.User.username,
-        )  # Group by all selected columns
         .first()
     )
 
@@ -199,41 +177,16 @@ def get_post(
             detail=f"Post with ID {post_id} not found"
         )
 
-    # Query to fetch the comments for the post
-    comments = (
-        db.query(
-            models.Comment.content,
-            models.Comment.created_at,
-            models.User.username.label("author_username"),
-        )
-        .join(models.User, models.Comment.user_id == models.User.id)
-        .filter(models.Comment.post_id == post_id)
-        .order_by(models.Comment.created_at.asc())  # Order comments by creation time
-        .all()
-    )
-
-    # Serialize comments into the response format
-    serialized_comments = [
-        CommentResponse(
-            content=comment.content,
-            created_at=comment.created_at,
-            author_username=comment.author_username,
-        )
-        for comment in comments
-    ]
-
-    # Serialize and return the post details with comments
-    return PostWithCommentsResponse(
-        id=post.id,
-        title=post.title,
-        content=post.content,
-        created_at=post.created_at,
-        category=post.category,
-        author_id=post.author_id,
-        author_username=post.author_username,
-        num_comments=post.num_comments,
-        comments=serialized_comments,  # Include serialized comments
-    )
+    # Return the post without comments and num_comments as a dictionary
+    return {
+        "id": post.id,
+        "title": post.title,
+        "content": post.content,
+        "created_at": post.created_at,
+        "category": post.category,
+        "author_id": post.author_id,
+        "author_username": post.author_username,
+    }
 
 # Endpoint to delete a post
 @post_router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
