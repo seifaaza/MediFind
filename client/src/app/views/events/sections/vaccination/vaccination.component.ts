@@ -6,6 +6,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { environment } from '../../../../../environments/environment.prod';
 import { RouterModule } from '@angular/router';
+import { EmptyDataComponent } from '../../../../core/errors/empty-data/empty-data.component';
 
 @Component({
   selector: 'app-vaccination',
@@ -16,6 +17,7 @@ import { RouterModule } from '@angular/router';
     NzButtonModule,
     NzModalModule,
     RouterModule,
+    EmptyDataComponent,
   ],
   templateUrl: './vaccination.component.html',
   styleUrl: './vaccination.component.css',
@@ -28,7 +30,7 @@ export class VaccinationComponent implements OnInit {
   error = false;
   noEvents = false;
   placeholders = Array(4).fill(0);
-  keyword = 'Vaccination';
+  keyword = 'Human Vaccination';
   selectedEvent: EventData | null = null;
 
   // Pagination State

@@ -6,9 +6,11 @@ import logging
 from app.db.init_db import init_db
 from fastapi.middleware.cors import CORSMiddleware
 from api.auth import auth_router
+from api.initial_data import initial_data_router
 from api.profile import profile_router
 from api.newsletter.newsletter import newsletter_router
 from api.newsletter.auth_newsletter import auth_newsletter_router
+from api.community.post import post_router
 
 # Load environment variables from .env file
 load_dotenv()
@@ -41,9 +43,11 @@ async def startup_event():
 
 # Routes
 app.include_router(auth_router, prefix="/auth")
+app.include_router(initial_data_router, prefix="/initial-data")
 app.include_router(profile_router, prefix="/profile")
 app.include_router(newsletter_router, prefix="/newsletter")
 app.include_router(auth_newsletter_router, prefix="/auth/newsletter")
+app.include_router(post_router, prefix="/post")
 
 @app.get("/routes")
 def show_routes():

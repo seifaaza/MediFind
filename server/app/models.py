@@ -29,7 +29,18 @@ class User(Base):
     # Add cascade delete to the newsletter_subscription relationship
     newsletter_subscription = relationship("Newsletter", back_populates="user", uselist=False, cascade="all, delete-orphan")  
 
+    # One-to-many relationships with posts, comments, and likes/dislikes
+    posts = relationship("Post", back_populates="user", cascade="all, delete-orphan")
+    comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
+    likes_dislikes = relationship("LikeDislike", back_populates="user", cascade="all, delete-orphan")
 
+# Association table for Allergy and Category many-to-many relationship
+allergy_categories = Table(
+    "allergy_categories",
+    Base.metadata,
+    Column("allergy_id", Integer, ForeignKey("allergies.id"), primary_key=True),
+    Column("category_id", Integer, ForeignKey("categories.id"), primary_key=True)
+)
 
 # Define the Allergy model for the allergies list
 class Allergy(Base):
@@ -40,7 +51,17 @@ class Allergy(Base):
 
     # Profiles that have this allergy
     profiles = relationship("Profile", secondary="profile_allergies", back_populates="allergies")
+    
+    # Categories associated with this allergy
+    categories = relationship("Category", secondary=allergy_categories, back_populates="allergies")
 
+# Association table for HealthGoal and Category many-to-many relationship
+health_goal_categories = Table(
+    "health_goal_categories",
+    Base.metadata,
+    Column("health_goal_id", Integer, ForeignKey("health_goals.id"), primary_key=True),
+    Column("category_id", Integer, ForeignKey("categories.id"), primary_key=True)
+)
 
 # Define the HealthGoal model for the health goals list
 class HealthGoal(Base):
@@ -52,6 +73,25 @@ class HealthGoal(Base):
     # Profiles that have this health goal
     profiles = relationship("Profile", secondary="profile_health_goals", back_populates="health_goals")
 
+    # Many-to-many relationship with Category
+    categories = relationship("Category", secondary=health_goal_categories, back_populates="health_goals")
+
+
+# Define the Category model
+class Category(Base):
+    __tablename__ = "categories"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, nullable=False)
+
+    # Relationship to Post model
+    posts = relationship("Post", back_populates="category")
+
+    # Many-to-many relationship with HealthGoal
+    health_goals = relationship("HealthGoal", secondary=health_goal_categories, back_populates="categories")
+
+    # Allergies associated with this category
+    allergies = relationship("Allergy", secondary=allergy_categories, back_populates="categories")
 
 # Association table for Profile and Allergy many-to-many relationship
 profile_allergies = Table(
@@ -89,7 +129,6 @@ class PersonalizedMedication(Base):
     profile = relationship("Profile", back_populates="personalized_medications")
 
 
-# Define the Profile model with cascading deletes only for personalized medications
 class Profile(Base):
     __tablename__ = "profiles"
 
@@ -110,34 +149,138 @@ class Profile(Base):
     # One-to-many relationships with cascading deletes for orphaned records (only where applicable)
     user = relationship("User", back_populates="profile", single_parent=True, cascade="all, delete-orphan")
 
+# Define the Post model
+class Post(Base):
+    __tablename__ = "posts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    content = Column(String, nullable=False)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
+
+    # Relationship to User model
+    user = relationship("User", back_populates="posts")
+
+    # Relationship to Category model
+    category = relationship("Category", back_populates="posts")
+
+    # Relationship to Comment model
+    comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
+
+# Define the Comment model (Response to the post)
+class Comment(Base):
+    __tablename__ = "comments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(String, nullable=False)  # Content of the comment
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))  # Created timestamp
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)  # Foreign key to User
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)  # Foreign key to Post
+
+    # Relationship to User model
+    user = relationship("User", back_populates="comments")
+
+    # Relationship to Post model
+    post = relationship("Post", back_populates="comments")
+
+    # Relationship to LikeDislike model (Many-to-many: each comment can have many likes/dislikes)
+    likes_dislikes = relationship("LikeDislike", back_populates="comment", cascade="all, delete-orphan")
+
+# Define the LikeDislike model (Tracks like or dislike for a comment)
+class LikeDislike(Base):
+    __tablename__ = "like_dislike"
+
+    id = Column(Integer, primary_key=True, index=True)
+    value = Column(Integer, nullable=False)  # 1 for like, -1 for dislike
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)  # Foreign key to User
+    comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)  # Foreign key to Comment
+
+    # Relationship to User model
+    user = relationship("User", back_populates="likes_dislikes")
+
+    # Relationship to Comment model
+    comment = relationship("Comment", back_populates="likes_dislikes")
+
+# Add relationships to User model for easy access
+User.posts = relationship("Post", back_populates="user", cascade="all, delete-orphan")
+User.comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
+User.likes_dislikes = relationship("LikeDislike", back_populates="user", cascade="all, delete-orphan")
 
 def insert_initial_data(db_session):
     try:
-        # Sample allergies and health goals data
-        allergies_data = [
-            "Peanuts", "Shellfish", "Eggs", "Milk", "Wheat", "Soy", "Tree nuts", 
-            "Fish", "Gluten", "Sesame"
+        # Sample categories data
+        categories_data = [
+            "Health Essentials", "Preventive Care", "Nutrition & Healthy Eating", 
+            "Fitness & Physical Health", "Mental Well-being", 
+            "Addiction Recovery & Support", "Other"
         ]
-        
-        health_goals_data = [
-            "Improve heart health", "Lose weight", "Increase muscle mass", "Reduce stress",
-            "Improve flexibility", "Lower blood pressure", "Control diabetes", 
-            "Improve sleep quality"
-        ]
-        
-        # Insert allergies
-        for allergy_name in allergies_data:
-            allergy = Allergy(name=allergy_name)
-            db_session.add(allergy)
-        
+
+        # Sample health goals and allergies data
+        health_goals_data = {
+            "Addiction Recovery & Support": ["Overcome Addiction"],
+            "Mental Well-being": ["Improve Mental Clarity", "Reduce Stress", "Improve Mood", "Enhance Focus"],
+            "Fitness & Physical Health": ["Build Muscle", "Lose Weight", "Increase Energy"],
+            "Nutrition & Healthy Eating": ["Eat Balanced Diet", "Improve Digestion", "Maintain Healthy Weight"],
+            "Preventive Care": ["Regular Health Checkups", "Prevent Chronic Diseases", "Improve Heart Health"],
+            "Health Essentials": ["Get Educated on Health", "Boost Immune System", "Improve Sleep Quality"]
+        }
+
+        allergies_data = {
+            "Addiction Recovery & Support": [],
+            "Mental Well-being": [],
+            "Fitness & Physical Health": [],
+            "Nutrition & Healthy Eating": ["Gluten", "Dairy", "Shellfish", "Peanuts", "Tree Nuts"],
+            "Preventive Care": ["Nuts", "Soy", "Wheat", "Eggs", "Milk"],
+            "Health Essentials": ["Pollen", "Dust", "Mold", "Latex", "Pet Dander"]
+        }
+
+        # Insert categories
+        categories = {}
+        for category_name in categories_data:
+            category = Category(name=category_name)
+            db_session.add(category)
+            categories[category_name] = category
+
         # Insert health goals
-        for goal_name in health_goals_data:
-            health_goal = HealthGoal(name=goal_name)
-            db_session.add(health_goal)
-        
-        # Commit both inserts in one go
-        db_session.commit()  # Commit the data insertion to the database
-        print("Initial data inserted successfully.")
+        health_goals = {}
+        for category_name, goal_names in health_goals_data.items():
+            for goal_name in goal_names:
+                health_goal = HealthGoal(name=goal_name)
+                db_session.add(health_goal)
+                if category_name not in health_goals:
+                    health_goals[category_name] = []
+                health_goals[category_name].append(health_goal)
+
+        # Insert allergies
+        allergies = {}
+        for category_name, allergy_names in allergies_data.items():
+            for allergy_name in allergy_names:
+                allergy = Allergy(name=allergy_name)
+                db_session.add(allergy)
+                if category_name not in allergies:
+                    allergies[category_name] = []
+                allergies[category_name].append(allergy)
+
+        # Commit the data insertion
+        db_session.commit()
+
+        # Now associate health goals and allergies with categories
+        for category_name, goal_list in health_goals.items():
+            category = categories[category_name]
+            for goal in goal_list:
+                category.health_goals.append(goal)
+
+        for category_name, allergy_list in allergies.items():
+            category = categories[category_name]
+            for allergy in allergy_list:
+                category.allergies.append(allergy)
+
+        # Commit the associations
+        db_session.commit()
+
+        print("Initial data inserted and associations created successfully.")
     except Exception as e:
         db_session.rollback()  # Rollback in case of an error
         print(f"Error inserting data: {e}")
@@ -158,3 +301,13 @@ if __name__ == "__main__":
     
     # Close the session after use
     db_session.close()
+
+
+
+
+
+
+
+
+
+

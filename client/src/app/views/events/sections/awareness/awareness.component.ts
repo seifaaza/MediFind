@@ -6,6 +6,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { environment } from '../../../../../environments/environment.prod';
 import { RouterModule } from '@angular/router';
+import { EmptyDataComponent } from '../../../../core/errors/empty-data/empty-data.component';
 
 @Component({
   selector: 'app-awareness',
@@ -16,6 +17,7 @@ import { RouterModule } from '@angular/router';
     NzButtonModule,
     NzModalModule,
     RouterModule,
+    EmptyDataComponent,
   ],
   templateUrl: './awareness.component.html',
   styleUrls: ['./awareness.component.css'],

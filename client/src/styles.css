@@ -30,6 +30,14 @@ img {
   transform: translateY(0); /* Reset position */
 }
 
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Number of lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .ant-modal-content {
   @apply p-1 md:p-4;
 }

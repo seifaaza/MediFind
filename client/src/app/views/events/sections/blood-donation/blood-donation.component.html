@@ -11,7 +11,8 @@
     <div
       *ngFor="let placeholder of placeholders"
       [ngClass]="{
-        'lg:last-of-type:hidden 3xl:last-of-type:flex': !showAllEvents
+        'lg:last-of-type:hidden 3xl:last-of-type:flex':
+          !showAllEvents && events.length > 3
       }"
       class="bg-white/80 flex flex-col gap-4 xl:gap-6 rounded-[0.14rem] animate-pulse w-full"
     >
@@ -28,7 +29,7 @@
 
   <!-- Error / Empty Data Message -->
   <div
-    *ngIf="error || noEvents"
+    *ngIf="error"
     class="flex flex-col justify-center items-center my-6 md:my-8 lg:my-10"
   >
     <svg
@@ -53,13 +54,11 @@
         />
       </g>
     </svg>
-    <h1 *ngIf="error" class="text-base text-slate-500 text-center">
+    <h1 class="text-base text-slate-500 text-center">
       Failed to load blood donation events. Please try again later.
     </h1>
-    <h1 *ngIf="noEvents" class="text-base text-slate-500">
-      No blood donation events found. Please try again later.
-    </h1>
   </div>
+  <app-empty-data *ngIf="noEvents"></app-empty-data>
 
   <!-- Display Events -->
   <div
@@ -70,7 +69,8 @@
       *ngFor="let event of events.slice(0, displayedEventsCount)"
       (click)="showModal(event)"
       [ngClass]="{
-        'lg:last-of-type:hidden 3xl:last-of-type:flex': !showAllEvents
+        'lg:last-of-type:hidden 3xl:last-of-type:flex':
+          !showAllEvents && events.length > 3
       }"
       class="bg-white/70 hover:bg-white flex flex-col gap-4 xl:gap-6 rounded-[0.14rem] border-[1px] border-slate-200 hover:border-primary duration-200 overflow-hidden cursor-pointer max-w-[340px] md:max-w-full"
     >
@@ -88,7 +88,7 @@
         </div>
         <span class="min-w-[1.5px] h-full bg-slate-300/80 rounded-md"></span>
         <div class="flex flex-col gap-2">
-          <h1 class="text-slate-700 text-base !leading-snug">
+          <h1 class="text-slate-700 text-base !leading-snug line-clamp">
             {{ event.title }}
           </h1>
           <div class="flex items-start gap-2">
@@ -115,7 +115,9 @@
       style="width: 500px"
     >
       <ng-template #modalContent>
-        <h1 class="text-slate-700 text-base lg:text-lg max-w-2xl mb-2">
+        <h1
+          class="text-slate-700 text-base lg:text-lg max-w-2xl mb-2 line-clamp"
+        >
           {{ selectedEvent?.title }}
         </h1>
         <p class="text-slate-600 max-w-xl">
@@ -209,7 +211,7 @@
 
   <!-- Show More / Show Less -->
   <div
-    *ngIf="!loading && !error && !noEvents"
+    *ngIf="!loading && !error && !noEvents && events.length > 3"
     class="flex justify-end mt-2 2xl:mt-4"
   >
     <button
