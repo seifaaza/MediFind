@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from sqlalchemy import func, desc
 from typing import List
+from app.utils.email.email_service import send_notification_email
 
 # Create an APIRouter instance for comment-related routes
 comment_router = APIRouter()
@@ -43,6 +44,11 @@ def create_comment(
     db.commit()
     db.refresh(new_comment)
 
+    # Send an email notification to the post owner, but not if they are commenting on their own post
+    if current_user.id != post.user_id:
+        # Construct the full post URL
+        send_notification_email(post.user.email, post_id)
+
     # Return the created comment
     return {"message": "Comment created successfully"}
 
@@ -72,7 +78,6 @@ def delete_comment(
     db.commit()
 
     return {"message": "Comment deleted successfully"}
-
 
 # Metadata model for pagination
 class Meta(BaseModel):

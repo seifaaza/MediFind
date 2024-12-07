@@ -4,7 +4,7 @@ from app import models
 from app.db.database import get_db
 from pydantic import BaseModel, Field
 from datetime import datetime, timezone
-from app.utils.email.email_service import send_email
+from app.utils.email.email_service import send_subscription_email
 
 # Define the router
 newsletter_router = APIRouter()
@@ -27,7 +27,7 @@ def subscribe_to_newsletter(request: NewsletterSubscribeRequest, db: Session = D
     db.add(new_subscription)
     db.commit()
     db.refresh(new_subscription)
-    send_email(request.email)
+    send_subscription_email(request.email)
 
     return {"message": "Successfully subscribed to the newsletter."}
 

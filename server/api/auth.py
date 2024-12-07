@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from app import models
 from app.db.database import get_db
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, ValidationError, EmailStr
 from app.utils.token import create_access_token, decode_access_token
 from fastapi.security import OAuth2PasswordBearer
 from dotenv import load_dotenv
@@ -93,6 +93,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 # Define Pydantic model for register request body
 class RegisterRequest(BaseModel):
     username: str = Field(..., min_length=3, max_length=20)
+    email: EmailStr
     password: str = Field(..., min_length=8)
 
 # Define Pydantic model for login request body
@@ -108,13 +109,18 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-# Register a new user
-def register_user(db: Session, username: str, password: str):
-    existing_user = db.query(models.User).filter(models.User.username == username).first()
-    if existing_user:
+# Register a new user with email, username, and password
+def register_user(db: Session, username: str, email: str, password: str):
+    existing_user_by_username = db.query(models.User).filter(models.User.username == username).first()
+    if existing_user_by_username:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username already registered")
+    
+    existing_user_by_email = db.query(models.User).filter(models.User.email == email).first()
+    if existing_user_by_email:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+    
     hashed_password = get_password_hash(password)
-    user = models.User(username=username, hashed_password=hashed_password)
+    user = models.User(username=username, email=email, hashed_password=hashed_password)
     db.add(user)
     db.commit()
     db.refresh(user)
@@ -155,27 +161,19 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
 # Register route with enhanced error handling
 @auth_router.post("/register", status_code=status.HTTP_201_CREATED)
 def register(request: RegisterRequest, db: Session = Depends(get_db)):
-    existing_user = db.query(models.User).filter(models.User.username == request.username).first()
-    if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already registered"
-        )
     try:
-        user = register_user(db, request.username, request.password)
+        user = register_user(db, request.username, request.email, request.password)
         access_token = create_access_token(data={"username": user.username, "id": user.id})
-        
+
         return {
             "id": user.id,
             "username": user.username,
+            "email": user.email,
             "token": access_token,
         }
 
-    except ValidationError as e:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"Validation error: {e.errors()}"
-        )
+    except HTTPException as e:
+        raise e
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

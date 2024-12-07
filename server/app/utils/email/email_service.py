@@ -33,7 +33,7 @@ def load_html_template(file_path):
         print(f"An error occurred while loading the template: {e}")
         raise
 
-def send_email(recipient: str):
+def send_subscription_email(recipient: str):
     """Function to send the email."""
     # Create the email content
     message = MIMEMultipart("alternative")
@@ -52,6 +52,42 @@ def send_email(recipient: str):
         # Replace placeholders in the template with actual URLs
         html_body = html_body.replace("{{unsubscribe_url}}", unsubscribe_url)
         html_body = html_body.replace("{{client_url}}", client_url)
+    except Exception as e:
+        print(f"Failed to load HTML template: {e}")
+        return
+
+    # Attach the HTML part
+    message.attach(MIMEText(html_body, "html"))
+
+    try:
+        # Set up the SMTP server and send the email
+        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as server:
+            server.ehlo()  # Identify ourselves to the server
+            server.starttls()  # Secure the connection
+            server.login(EMAIL_USERNAME, EMAIL_PASSWORD)
+            server.sendmail(EMAIL_FROM, recipient, message.as_string())
+            print("Email sent successfully.")
+    except smtplib.SMTPException as e:
+        print(f"SMTP error occurred: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def send_notification_email(recipient: str, post_id: str):
+    """Function to send the email."""
+    # Create the email content
+    message = MIMEMultipart("alternative")
+    message["From"] = EMAIL_FROM
+    message["To"] = recipient
+    message["Subject"] = "New response on your post!"
+
+    try:
+        # Load HTML content from the external file in templates folder
+        html_body = load_html_template("comment_notif.html")
+        
+        # Replace placeholders in the template with actual values
+        post_url = f"{CLIENT_URL}/community/{post_id}"
+        html_body = html_body.replace("{{post_url}}", post_url)
+
     except Exception as e:
         print(f"Failed to load HTML template: {e}")
         return
