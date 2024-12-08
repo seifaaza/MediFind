@@ -152,6 +152,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
           this.scrollToFragment(fragment);
         }
       });
+    // Subscribe to route changes to update `isNotHome`
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.isNotHome = event.urlAfterRedirects !== '/';
+      });
   }
 
   scrollToFragment(fragment: string): void {
