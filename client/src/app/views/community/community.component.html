@@ -1,12 +1,97 @@
 <div class="bg-light pt-20 pb-16 min-h-screen">
-  <div class="md:container mx-auto px-3 h-screen bg-slate-200">
-    <div class="gap-x-[1em] lg:columns-2 2xl:columns-3">
-      <div class="h-44 w-full bg-red-400 break-inside-avoid mb-[1em]"></div>
-      <div class="h-96 w-full bg-red-400 break-inside-avoid mb-[1em]"></div>
-      <div class="h-72 w-full bg-red-400 break-inside-avoid mb-[1em]"></div>
-      <div class="h-52 w-full bg-red-400 break-inside-avoid mb-[1em]"></div>
-      <div class="h-32 w-full bg-red-400 break-inside-avoid mb-[1em]"></div>
-      <div class="h-80 w-full bg-red-400 break-inside-avoid mb-[1em]"></div>
+  <div class="md:container mx-auto px-3">
+    <!-- Skeleton Loader -->
+    <div *ngIf="isLoading" class="gap-x-[1em] lg:columns-2 2xl:columns-3">
+      <div
+        *ngFor="let placeholder of placeholders"
+        [style.height]="getRandomHeight()"
+        class="bg-white/70 p-6 lg:p-7 xl:p-8 rounded-sm break-inside-avoid mb-2 lg:mb-3 animate-pulse"
+      >
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="flex items-center gap-2">
+            <nz-avatar
+              [nzSize]="30"
+              class="bg-gray-200/80 !text-sm flex justify-center items-center"
+            ></nz-avatar>
+            <div class="bg-gray-200/80 h-[.6rem] w-16 md:w-20 rounded"></div>
+          </div>
+        </div>
+        <div class="grow mt-4">
+          <div class="bg-gray-200/80 h-[.7rem] w-3/5 rounded mb-5"></div>
+          <div class="bg-gray-200/80 h-[.6rem] w-full rounded mb-4"></div>
+          <div class="bg-gray-200/80 h-[.6rem] w-5/6 rounded"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Data Found -->
+    <app-empty-data *ngIf="!isLoading && posts.length === 0"></app-empty-data>
+
+    <!-- Display posts once fetched -->
+    <div
+      *ngIf="!isLoading && posts.length > 0"
+      class="gap-x-[1em] lg:columns-2 2xl:columns-3"
+    >
+      <div
+        *ngFor="let post of posts"
+        [routerLink]="'post/' + post.id"
+        class="bg-white/70 hover:bg-white p-6 lg:p-7 xl:p-8 rounded-sm border-[1px] border-slate-200 hover:border-primary duration-200 cursor-pointer break-inside-avoid mb-2 lg:mb-3"
+      >
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="flex items-center gap-2">
+            <nz-avatar
+              [nzSize]="30"
+              nzIcon="user"
+              class="bg-primary/10 text-slate-400 !text-sm flex justify-center items-center"
+            ></nz-avatar>
+            <h3 class="text-slate-500 text-sm !leading-relaxed capitalize">
+              {{ post.author_username }}
+            </h3>
+          </div>
+          <h2 class="text-xs lg:text-[.85rem] text-slate-500/80 capitalize">
+            {{ formatDate(post.created_at) }}
+          </h2>
+        </div>
+
+        <div class="grow mt-4">
+          <h3 class="text-slate-600 text-base">
+            {{ post.title }}
+          </h3>
+          <p class="text-sm text-slate-500 mt-2 line-clamp-5">
+            {{ post.content }}
+          </p>
+        </div>
+        <div class="ml-2 mt-4 lg:mt-5">
+          <div class="w-fit flex justify-center items-center gap-2">
+            <span
+              nz-icon
+              nzType="comment"
+              nzTheme="outline"
+              class="text-slate-500"
+            ></span>
+            <h1 class="text-slate-600">{{ post.num_comments }} Responses</h1>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="isLoading && posts.length > 0"
+        class="bg-white/70 p-6 lg:p-7 xl:p-8 rounded-sm break-inside-avoid mb-2 lg:mb-3 animate-pulse h-60"
+      >
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="flex items-center gap-2">
+            <nz-avatar
+              [nzSize]="30"
+              class="bg-gray-200/80 !text-sm flex justify-center items-center"
+            ></nz-avatar>
+            <div class="bg-gray-200/80 h-[.6rem] w-16 md:w-20 rounded"></div>
+          </div>
+        </div>
+        <div class="grow mt-4">
+          <div class="bg-gray-200/80 h-[.7rem] w-3/5 rounded mb-5"></div>
+          <div class="bg-gray-200/80 h-[.6rem] w-full rounded mb-4"></div>
+          <div class="bg-gray-200/80 h-[.6rem] w-5/6 rounded"></div>
+        </div>
+      </div>
     </div>
   </div>
   <app-create-post></app-create-post>

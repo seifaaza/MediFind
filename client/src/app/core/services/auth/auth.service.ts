@@ -8,11 +8,13 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AuthService {
   private tokenKey = 'authToken';
-  private usernameSubject = new BehaviorSubject<string | null>(null); // Add BehaviorSubject
+  private usernameSubject = new BehaviorSubject<string | null>(null);
+  private idSubject = new BehaviorSubject<string | null>(null);
 
   constructor(private cookieService: CookieService) {
     const decodedToken = this.getDecodedToken();
     this.usernameSubject.next(decodedToken ? decodedToken.username : null); // Initialize usernameSubject
+    this.idSubject.next(decodedToken ? decodedToken.id : null); // Initialize idSubject
   }
 
   // Save token to cookies
@@ -27,6 +29,7 @@ export class AuthService {
     // Extract username from token and update subject
     const decodedToken = this.getDecodedToken();
     this.usernameSubject.next(decodedToken ? decodedToken.username : null);
+    this.idSubject.next(decodedToken ? decodedToken.id : null);
   }
 
   // Retrieve token from cookies
@@ -53,6 +56,10 @@ export class AuthService {
     return this.usernameSubject;
   }
 
+  getId(): BehaviorSubject<string | null> {
+    return this.idSubject;
+  }
+
   // Check if user is authenticated
   isAuthenticated(): boolean {
     return !!this.getToken();
@@ -62,5 +69,6 @@ export class AuthService {
   logout(): void {
     this.cookieService.delete(this.tokenKey, '/'); // Remove the token cookie
     this.usernameSubject.next(null); // Reset the username observable
+    this.idSubject.next(null); // Reset the username observable
   }
 }

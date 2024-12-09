@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --light-bg: #eafbff;
+  --light-bg: #f1faff;
   --main-bg: #000;
 }
 html {
@@ -28,14 +28,6 @@ img {
 .fade-in-visible {
   opacity: 1;
   transform: translateY(0); /* Reset position */
-}
-
-.line-clamp {
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* Number of lines */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .ant-modal-content {

@@ -22,12 +22,21 @@ import { FitnessComponent } from './views/topics/categories/fitness/fitness.comp
 import { MentalWellBeingComponent } from './views/topics/categories/mental-well-being/mental-well-being.component';
 import { AddictionComponent } from './views/topics/categories/addiction/addiction.component';
 import { HealthEssentialsItemComponent } from './views/topics/categories/health-essentials/health-essentials-item/health-essentials-item.component';
+import { PostItemComponent } from './views/community/post-item/post-item.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'learn-more', component: LearnMoreComponent },
   { path: 'medicines', component: MedicinesComponent },
-  { path: 'community', component: CommunityComponent },
+
+  {
+    path: 'community',
+    children: [
+      { path: '', component: CommunityComponent },
+      { path: 'post/:id', component: PostItemComponent },
+    ],
+  },
+
   { path: 'events', component: EventsComponent },
   {
     path: 'auth',

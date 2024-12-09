@@ -9,7 +9,8 @@
     <div
       *ngFor="let placeholder of placeholders"
       [ngClass]="{
-        'lg:last-of-type:hidden 3xl:last-of-type:flex': !showAllEvents && events.length > 3
+        'lg:last-of-type:hidden 3xl:last-of-type:flex':
+          !showAllEvents && events.length > 3
       }"
       class="bg-white/80 flex flex-col gap-4 xl:gap-6 rounded-[0.14rem] animate-pulse w-full"
     >
@@ -24,7 +25,7 @@
     </div>
   </div>
 
-  <!-- Error / Empty Data Message -->
+  <!-- Error -->
   <div
     *ngIf="error"
     class="flex flex-col justify-center items-center my-6 md:my-8 lg:my-10"
@@ -55,6 +56,8 @@
       Failed to load awareness camps. Please try again later.
     </h1>
   </div>
+
+  <!-- No Data Found -->
   <app-empty-data *ngIf="noEvents"></app-empty-data>
 
   <!-- Display Events -->
@@ -66,7 +69,8 @@
       *ngFor="let event of events.slice(0, displayedEventsCount)"
       (click)="showModal(event)"
       [ngClass]="{
-        'lg:last-of-type:hidden 3xl:last-of-type:flex': !showAllEvents && events.length > 3
+        'lg:last-of-type:hidden 3xl:last-of-type:flex':
+          !showAllEvents && events.length > 3
       }"
       class="bg-white/70 hover:bg-white flex flex-col gap-4 xl:gap-6 rounded-[0.14rem] border-[1px] border-slate-200 hover:border-primary duration-200 overflow-hidden cursor-pointer max-w-[340px] md:max-w-full"
     >
@@ -84,7 +88,7 @@
         </div>
         <span class="min-w-[1.5px] h-full bg-slate-300/80 rounded-md"></span>
         <div class="flex flex-col gap-2">
-          <h1 class="text-slate-700 text-base !leading-snug line-clamp">
+          <h1 class="text-slate-700 text-base !leading-snug line-clamp-3">
             {{ event.title }}
           </h1>
           <div class="flex items-start gap-2">
@@ -111,7 +115,7 @@
     >
       <ng-template #modalContent>
         <h1
-          class="text-slate-700 text-base lg:text-lg max-w-2xl mb-2 line-clamp"
+          class="text-slate-700 text-base lg:text-lg max-w-2xl mb-2 line-clamp-3"
         >
           {{ selectedEvent?.title }}
         </h1>
