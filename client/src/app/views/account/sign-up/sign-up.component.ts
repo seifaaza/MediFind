@@ -46,6 +46,7 @@ export class SignUpComponent {
   ) {
     this.signUpForm = this.fb.group({
       username: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]], // Email field with validation
       password: ['', [Validators.required]],
     });
   }
@@ -57,12 +58,13 @@ export class SignUpComponent {
   onSubmit(): void {
     if (this.signUpForm.invalid) return;
 
-    const { username, password } = this.signUpForm.value;
+    const { username, email, password } = this.signUpForm.value; // Include email
     this.loading = true;
     this.errorMessage = '';
 
     this.http
-      .post(`${this.apiUrl}/auth/register`, { username, password })
+      .post(`${this.apiUrl}/auth/register`, { username, email, password })
+      // Include email in the payload
       .subscribe({
         next: (response: any) => {
           console.log('Register successful', response);
@@ -71,10 +73,10 @@ export class SignUpComponent {
           // Navigate to profile or other page
           this.router.navigate(['/profile']);
         },
+
         error: (error: HttpErrorResponse) => {
-          console.error('Register failed', error);
           this.errorMessage =
-            error.error?.message || 'Invalid username or password.';
+            error.error?.message || 'Invalid username, email, or password.';
         },
         complete: () => {
           this.loading = false;

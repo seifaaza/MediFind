@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -43,6 +43,7 @@ export class PostItemComponent implements OnInit {
   maxLength: number = 350; // Maximum character limit
   isTooLong: boolean = false;
   posting = false;
+  newComment: any = null;
 
   private usernameSubscription: Subscription | null = null;
 
@@ -51,7 +52,8 @@ export class PostItemComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private message: NzMessageService // Inject NZ Message Service
+    private message: NzMessageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   onInputChange(): void {
@@ -102,38 +104,39 @@ export class PostItemComponent implements OnInit {
 
   postComment(): void {
     if (!this.isAuthenticated) {
-      // Redirect to sign-in if the user is not authenticated
       this.router.navigate(['/auth/sign-in']);
       return;
     }
-    const body = {
-      content: this.inputText,
-    };
+    const body = { content: this.inputText };
     this.posting = true;
+
     if (this.id) {
       const url = `${this.apiUrl}/comment/${this.id}`;
       const headers = {
-        Authorization: `Bearer ${this.authService.getToken()}`, // Add token for authorization
+        Authorization: `Bearer ${this.authService.getToken()}`,
       };
 
       this.http.post(url, body, { headers }).subscribe({
-        next: () => {
-          this.inputText = ''; // Clear input after successful submission
-          this.posting = false; // End loading
+        next: (response) => {
+          this.newComment = response;
+          this.inputText = '';
+          this.posting = false;
+          this.cdr.detectChanges(); // Manually trigger change detection
         },
         error: () => {
-          this.posting = false; // End loading
-          this.message.create(
-            'error',
-            'An error occurred while posting your comment. Please try again!'
-          );
+          this.posting = false;
+          this.message.create('error', 'An error occurred. Please try again!');
         },
       });
     } else {
-      this.message.create(
-        'error',
-        'Failed to post your comment. Please try again!'
-      );
+      this.message.create('error', 'Failed to post your comment.');
+    }
+  }
+
+  updateCommentList(newComment: any): void {
+    // Directly update the comments list in the CommentsComponent
+    if (this.postData) {
+      this.postData.comments.unshift(newComment); // Add new comment at the top (or adjust based on desired order)
     }
   }
 

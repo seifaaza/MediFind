@@ -71,7 +71,7 @@
                 nz-button
                 nzType="link"
                 class="m-2"
-                [disabled]="isTooLong || !inputText.trim()"
+                [disabled]="!posting || isTooLong || !inputText.trim()"
               >
                 <span
                   *ngIf="!posting"
@@ -101,7 +101,7 @@
           class="lg:hidden h-[1px] w-3/4 mx-auto bg-slate-300/60 rounded-md"
         ></span>
         <div class="w-full lg:w-5/12">
-          <app-comments [postId]="id"></app-comments>
+          <app-comments [postId]="id" [newComment]="newComment"></app-comments>
         </div>
       </div>
     </div>

@@ -1,5 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NzAvatarComponent } from 'ng-zorro-antd/avatar';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -10,8 +15,9 @@ import { enGB } from 'date-fns/locale';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth/auth.service';
-import { Router } from '@angular/router'; // Import Router
+import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-comments',
@@ -28,6 +34,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class CommentsComponent implements OnChanges {
   @Input() postId: string | null = null;
+  @Input() newComment: any = null;
   userId: string | null = null;
   apiUrl = environment.API_URL;
   comments: any[] = [];
@@ -41,8 +48,9 @@ export class CommentsComponent implements OnChanges {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private router: Router, // Inject Router
-    private message: NzMessageService // Inject NZ Message Service
+    private router: Router,
+    private message: NzMessageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +62,12 @@ export class CommentsComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['postId'] && this.postId) {
       this.fetchComments();
+    }
+
+    if (changes['newComment'] && this.newComment) {
+      // Add the new comment to the list and trigger change detection manually
+      this.comments.unshift(this.newComment);
+      this.cdr.detectChanges(); // Manually trigger change detection
     }
   }
 
@@ -73,6 +87,10 @@ export class CommentsComponent implements OnChanges {
         this.loading = false;
       },
     });
+  }
+
+  addNewCommentToList(newComment: any): void {
+    this.comments.unshift(newComment); // Add the new comment at the top of the list (or adjust based on desired order)
   }
 
   checkUserReaction(comment: any): void {
