@@ -11,6 +11,10 @@ import { environment } from '../../../../environments/environment.prod';
 import { formatDistanceToNow, format } from 'date-fns';
 import { enGB } from 'date-fns/locale';
 import { CommentsComponent } from './comments/comments.component';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post-item',
@@ -23,27 +27,47 @@ import { CommentsComponent } from './comments/comments.component';
     NzInputModule,
     NzButtonModule,
     CommentsComponent,
+    FormsModule,
   ],
   templateUrl: './post-item.component.html',
   styleUrls: ['./post-item.component.css'],
 })
 export class PostItemComponent implements OnInit {
+  isAuthenticated = false;
   apiUrl = environment.API_URL;
   id: string | null = null;
   loading = true; // Loading state
   postData: any = null; // Post data
 
+  inputText: string = ''; // Two-way binding property
+  maxLength: number = 350; // Maximum character limit
+  isTooLong: boolean = false;
+  posting = false;
+
+  private usernameSubscription: Subscription | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private message: NzMessageService // Inject NZ Message Service
   ) {}
+
+  onInputChange(): void {
+    this.isTooLong = this.inputText.length > this.maxLength;
+  }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
       this.fetchPostData(this.id);
     }
+    this.usernameSubscription = this.authService
+      .getUsername()
+      .subscribe((username) => {
+        this.isAuthenticated = !!username;
+      });
   }
 
   fetchPostData(id: string): void {
@@ -73,6 +97,49 @@ export class PostItemComponent implements OnInit {
       return distance; // Show "2 days ago", etc.
     } else {
       return format(postDate, "'Yesterday, at' hh:mm a", { locale: enGB }); // Format like "Yesterday, at 7:10 PM"
+    }
+  }
+
+  postComment(): void {
+    if (!this.isAuthenticated) {
+      // Redirect to sign-in if the user is not authenticated
+      this.router.navigate(['/auth/sign-in']);
+      return;
+    }
+    const body = {
+      content: this.inputText,
+    };
+    this.posting = true;
+    if (this.id) {
+      const url = `${this.apiUrl}/comment/${this.id}`;
+      const headers = {
+        Authorization: `Bearer ${this.authService.getToken()}`, // Add token for authorization
+      };
+
+      this.http.post(url, body, { headers }).subscribe({
+        next: () => {
+          this.inputText = ''; // Clear input after successful submission
+          this.posting = false; // End loading
+        },
+        error: () => {
+          this.posting = false; // End loading
+          this.message.create(
+            'error',
+            'An error occurred while posting your comment. Please try again!'
+          );
+        },
+      });
+    } else {
+      this.message.create(
+        'error',
+        'Failed to post your comment. Please try again!'
+      );
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.usernameSubscription) {
+      this.usernameSubscription.unsubscribe();
     }
   }
 }

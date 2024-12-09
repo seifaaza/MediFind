@@ -11,6 +11,7 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { Router } from '@angular/router'; // Import Router
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-comments',
@@ -40,7 +41,8 @@ export class CommentsComponent implements OnChanges {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private router: Router // Inject Router
+    private router: Router, // Inject Router
+    private message: NzMessageService // Inject NZ Message Service
   ) {}
 
   ngOnInit(): void {
@@ -88,9 +90,6 @@ export class CommentsComponent implements OnChanges {
             comment.isDisliked = response.reaction === 'dislike';
           }
         },
-        error: () => {
-          // Handle errors if needed
-        },
       });
     }
   }
@@ -98,7 +97,7 @@ export class CommentsComponent implements OnChanges {
   onLike(comment: any): void {
     if (!this.userId) {
       // Redirect to sign-in if the user is not authenticated
-      this.router.navigate(['/sign-in']);
+      this.router.navigate(['/auth/sign-in']);
       return;
     }
 
@@ -115,7 +114,10 @@ export class CommentsComponent implements OnChanges {
           comment.likes_count -= 1; // Decrease like count
         },
         error: () => {
-          // Handle error if necessary
+          this.message.create(
+            'error',
+            'Failed to remove your like. Please try again!'
+          );
         },
       });
     } else {
@@ -135,7 +137,10 @@ export class CommentsComponent implements OnChanges {
           }
         },
         error: () => {
-          // Handle error if necessary
+          this.message.create(
+            'error',
+            'Failed to like the comment. Please try again!'
+          );
         },
       });
     }
@@ -144,7 +149,7 @@ export class CommentsComponent implements OnChanges {
   onDislike(comment: any): void {
     if (!this.userId) {
       // Redirect to sign-in if the user is not authenticated
-      this.router.navigate(['/sign-in']);
+      this.router.navigate(['/auth/sign-in']);
       return;
     }
 
@@ -161,7 +166,10 @@ export class CommentsComponent implements OnChanges {
           comment.dislikes_count -= 1; // Decrease dislike count
         },
         error: () => {
-          // Handle error if necessary
+          this.message.create(
+            'error',
+            'Failed to remove your dislike. Please try again!'
+          );
         },
       });
     } else {
@@ -181,7 +189,10 @@ export class CommentsComponent implements OnChanges {
           }
         },
         error: () => {
-          // Handle error if necessary
+          this.message.create(
+            'error',
+            'Failed to dislike the comment. Please try again!'
+          );
         },
       });
     }

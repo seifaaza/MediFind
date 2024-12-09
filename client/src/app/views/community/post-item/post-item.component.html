@@ -60,13 +60,38 @@
                 rows="5"
                 placeholder="Type your answer here..."
                 class="placeholder:text-slate-400/80"
+                [(ngModel)]="inputText"
+                (input)="onInputChange()"
               ></textarea>
             </nz-input-group>
+
             <ng-template #suffixIconSubmit>
-              <button nz-button nzType="link" class="m-2">
-                <span nz-icon nzType="send" nzTheme="outline"></span>
+              <button
+                (click)="postComment()"
+                nz-button
+                nzType="link"
+                class="m-2"
+                [disabled]="isTooLong || !inputText.trim()"
+              >
+                <span
+                  *ngIf="!posting"
+                  nz-icon
+                  nzType="send"
+                  nzTheme="outline"
+                ></span>
+                <span
+                  *ngIf="posting"
+                  nz-icon
+                  nzType="loading"
+                  nzTheme="outline"
+                ></span>
               </button>
             </ng-template>
+
+            <p *ngIf="isTooLong" class="text-red-500">
+              Oops! Maximum character limit exceeded. Try shortening your
+              response.
+            </p>
           </div>
         </div>
         <span
