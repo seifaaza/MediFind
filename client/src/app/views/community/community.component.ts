@@ -9,9 +9,11 @@ import { NzAvatarComponent } from 'ng-zorro-antd/avatar';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { Router, RouterModule } from '@angular/router';
 import { environment } from '../../../environments/environment.prod';
+import { PostsService } from '../../core/services/post/post.service';
 
-interface Post {
-  id: string;
+// Define Post interface
+export interface Post {
+  id: number; // if the backend returns a number
   author_username: string;
   created_at: string;
   title: string;
@@ -44,9 +46,18 @@ export class CommunityComponent implements OnInit {
   skip = 0;
   limit = 10;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private postsService: PostsService
+  ) {}
 
   ngOnInit(): void {
+    // Subscribe to the posts observable
+    this.postsService.posts$.subscribe((posts) => {
+      this.posts = posts;
+    });
+
     this.fetchPosts(); // Initial fetch of posts
   }
 
@@ -67,6 +78,7 @@ export class CommunityComponent implements OnInit {
   }
 
   fetchPosts(): void {
+    if (this.isLoading || this.isAllPostsLoaded) return;
     this.isLoading = true; // Set isLoading to true to show skeleton loader
 
     this.http
@@ -76,7 +88,7 @@ export class CommunityComponent implements OnInit {
           if (response.data.length === 0) {
             this.isAllPostsLoaded = true; // No more posts to load
           } else {
-            this.posts = [...this.posts, ...response.data]; // Append new posts
+            this.postsService.addMultiplePosts(response.data); // Append new posts
             this.skip += this.limit; // Update skip for next request
           }
           this.isLoading = false; // Set isLoading to false when posts are loaded

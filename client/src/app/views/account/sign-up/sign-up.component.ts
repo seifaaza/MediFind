@@ -72,14 +72,13 @@ export class SignUpComponent {
 
           // Navigate to profile or other page
           this.router.navigate(['/profile']);
+          this.loading = false;
         },
 
         error: (error: HttpErrorResponse) => {
+          this.loading = false;
           this.errorMessage =
             error.error?.message || 'Invalid username, email, or password.';
-        },
-        complete: () => {
-          this.loading = false;
         },
       });
   }

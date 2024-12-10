@@ -13,6 +13,8 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { environment } from '../../../../environments/environment.prod';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { PostsService } from '../../../core/services/post/post.service';
+import { Post } from '../../../core/models/post.interface';
 
 @Component({
   selector: 'app-create-post',
@@ -47,7 +49,7 @@ export class CreatePostComponent implements OnInit {
   private usernameSubscription: Subscription | null = null;
 
   constructor(
-    private modal: NzModalService,
+    private postsService: PostsService,
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
@@ -121,19 +123,21 @@ export class CreatePostComponent implements OnInit {
       category_id: this.selectedCategory.id, // This is safe now because we checked if selectedCategory is not null
     };
 
-    this.http.post(`${this.apiUrl}/post`, postData, { headers }).subscribe({
-      next: () => {
-        this.message.success('Post created successfully!');
-        this.isVisible = false;
-        this.resetForm();
-      },
-      error: () => {
-        this.message.error('Failed to create post');
-      },
-      complete: () => {
-        this.loading = false;
-      },
-    });
+    this.http
+      .post<Post>(`${this.apiUrl}/post`, postData, { headers })
+      .subscribe({
+        next: (response: Post) => {
+          this.postsService.addPost(response); // Add the new post to the existing posts
+          this.message.success('Post created successfully!');
+          this.isVisible = false;
+          this.resetForm();
+          this.loading = false;
+        },
+        error: () => {
+          this.message.error('Failed to create post');
+          this.loading = false;
+        },
+      });
   }
 
   resetForm(): void {

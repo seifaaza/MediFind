@@ -65,19 +65,16 @@ export class SignInComponent {
       .post(`${this.apiUrl}/auth/login`, { username, password })
       .subscribe({
         next: (response: any) => {
-          console.log('Login successful', response);
           this.setAuthCookie(response.token);
 
           // Navigate to profile or other page
           this.router.navigate(['/profile']);
+          this.loading = false;
         },
         error: (error: HttpErrorResponse) => {
-          console.error('Login failed', error);
+          this.loading = false;
           this.errorMessage =
             error.error?.message || 'Invalid username or password.';
-        },
-        complete: () => {
-          this.loading = false;
         },
       });
   }
