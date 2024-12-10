@@ -28,6 +28,7 @@ import { Subscription } from 'rxjs';
     NzButtonModule,
     CommentsComponent,
     FormsModule,
+    
   ],
   templateUrl: './post-item.component.html',
   styleUrls: ['./post-item.component.css'],

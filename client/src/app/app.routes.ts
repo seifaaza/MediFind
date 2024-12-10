@@ -73,6 +73,6 @@ export const routes: Routes = [
     ],
   },
   { path: 'create-profile', component: CreateProfileComponent },
-  { path: 'error', component: ErrorComponent },
+  { path: 'server-error', component: ErrorComponent },
   { path: '**', component: NotFoundComponent },
 ];

@@ -153,11 +153,11 @@
             </p>
           </div>
         </div>
-        <app-delete-post
+        <app-delete-comment
           *ngIf="userId == comment.user_id"
           [commentId]="comment.id"
           (commentDeleted)="onCommentDeleted($event)"
-        ></app-delete-post>
+        ></app-delete-comment>
       </div>
     </div>
   </div>

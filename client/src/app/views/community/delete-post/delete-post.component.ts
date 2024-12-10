@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { environment } from '../../../../environments/environment.prod';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { environment } from '../../../../../../environments/environment.prod';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../../core/services/auth/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
@@ -12,17 +12,16 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   standalone: true,
   imports: [NzButtonComponent, NzIconModule, NzModalModule],
   templateUrl: './delete-post.component.html',
-  styleUrls: ['./delete-post.component.css'],
+  styleUrl: './delete-post.component.css',
 })
 export class DeletePostComponent {
-  @Input() commentId!: string; // Accept comment ID as an input
-  @Output() commentDeleted = new EventEmitter<string>();
+  @Input() postId!: number;
+  @Output() postDeleted = new EventEmitter<number>();
   apiUrl = environment.API_URL;
   isVisible = false;
   loading = false;
 
   constructor(
-    private modal: NzModalService,
     private http: HttpClient, // Inject HttpClient
     private authService: AuthService, // Inject AuthService
     private message: NzMessageService
@@ -44,19 +43,19 @@ export class DeletePostComponent {
 
     // Make the API call to delete the comment
     this.http
-      .delete(`${this.apiUrl}/comment/${this.commentId}`, { headers })
+      .delete(`${this.apiUrl}/post/${this.postId}`, { headers })
       .subscribe({
         next: () => {
           this.isVisible = false; // Close the modal
           this.loading = false; // Hide loading icon
-          this.commentDeleted.emit(this.commentId);
+          this.postDeleted.emit(this.postId);
         },
         error: () => {
           this.loading = false; // Hide loading icon
           this.isVisible = false; // Close the modal
           this.message.create(
             'error',
-            'Failed to delete the comment. Please try again!'
+            'Failed to delete this post. Please try again!'
           );
         },
       });

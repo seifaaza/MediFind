@@ -18,7 +18,7 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CommonModule } from '@angular/common';
-import { DeletePostComponent } from './delete-post/delete-post.component';
+import { DeleteCommentComponent } from './delete-comment/delete-comment.component';
 
 @Component({
   selector: 'app-comments',
@@ -29,7 +29,7 @@ import { DeletePostComponent } from './delete-post/delete-post.component';
     NzIconModule,
     NzButtonModule,
     NzDropDownModule,
-    DeletePostComponent,
+    DeleteCommentComponent,
   ],
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.css'],

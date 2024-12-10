@@ -19,20 +19,32 @@ export class PostsService {
   private postsSubject = new BehaviorSubject<Post[]>([]);
   posts$ = this.postsSubject.asObservable();
 
-  // Add new post at the beginning of the list
+  // Add a new post to the beginning of the list, avoiding duplicates
   addPost(post: Post): void {
     const currentPosts = this.postsSubject.getValue();
-    this.postsSubject.next([post, ...currentPosts]); // Add new post to the beginning
+    if (!currentPosts.find((existingPost) => existingPost.id === post.id)) {
+      this.postsSubject.next([post, ...currentPosts]);
+    }
   }
 
-  // Set initial posts list
+  // Set the initial posts list
   setPosts(posts: Post[]): void {
-    this.postsSubject.next(posts); // Set initial posts list
+    const uniquePosts = this.getUniquePosts(posts);
+    this.postsSubject.next(uniquePosts);
   }
 
-  // Add multiple posts (useful after fetching new posts)
+  // Add multiple posts to the list, ensuring no duplicates
   addMultiplePosts(posts: Post[]): void {
     const currentPosts = this.postsSubject.getValue();
-    this.postsSubject.next([...currentPosts, ...posts]); // Append new posts
+    const allPosts = [...currentPosts, ...posts];
+    const uniquePosts = this.getUniquePosts(allPosts);
+    this.postsSubject.next(uniquePosts);
+  }
+
+  // Helper method to filter unique posts by ID
+  private getUniquePosts(posts: Post[]): Post[] {
+    const uniquePostsMap = new Map<number, Post>();
+    posts.forEach((post) => uniquePostsMap.set(post.id, post));
+    return Array.from(uniquePostsMap.values());
   }
 }

@@ -61,7 +61,7 @@
             {{ post.content }}
           </p>
         </div>
-        <div class="ml-2 mt-4 lg:mt-5">
+        <div class="ml-2 mt-4 lg:mt-5 flex justify-between items-center gap-4">
           <div class="w-fit flex justify-center items-center gap-2">
             <span
               nz-icon
@@ -71,6 +71,12 @@
             ></span>
             <h1 class="text-slate-600">{{ post.num_comments }} Responses</h1>
           </div>
+          <app-delete-post
+            *ngIf="userId && userId == post.author_id.toString()"
+            [postId]="post.id"
+            (click)="onStopEvent($event)"
+            (postDeleted)="onPostDeleted($event)"
+          ></app-delete-post>
         </div>
       </div>
       <div
