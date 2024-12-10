@@ -18,6 +18,7 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CommonModule } from '@angular/common';
+import { DeletePostComponent } from './delete-post/delete-post.component';
 
 @Component({
   selector: 'app-comments',
@@ -28,6 +29,7 @@ import { CommonModule } from '@angular/common';
     NzIconModule,
     NzButtonModule,
     NzDropDownModule,
+    DeletePostComponent,
   ],
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.css'],
@@ -91,6 +93,11 @@ export class CommentsComponent implements OnChanges {
 
   addNewCommentToList(newComment: any): void {
     this.comments.unshift(newComment); // Add the new comment at the top of the list (or adjust based on desired order)
+  }
+
+  onCommentDeleted(commentId: string): void {
+    this.comments = this.comments.filter((comment) => comment.id !== commentId);
+    this.cdr.detectChanges(); // Trigger change detection manually
   }
 
   checkUserReaction(comment: any): void {

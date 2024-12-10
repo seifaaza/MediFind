@@ -114,7 +114,7 @@
         </h2>
       </div>
       <p class="text-sm text-slate-500 mt-1">{{ comment.content }}</p>
-      <div class="mt-1 flex justify-end">
+      <div class="mt-1 flex justify-between items-center">
         <div class="flex justify-center items-center gap-4">
           <div class="flex justify-center items-center gap-[.15rem]">
             <button
@@ -153,6 +153,11 @@
             </p>
           </div>
         </div>
+        <app-delete-post
+          *ngIf="userId == comment.user_id"
+          [commentId]="comment.id"
+          (commentDeleted)="onCommentDeleted($event)"
+        ></app-delete-post>
       </div>
     </div>
   </div>
