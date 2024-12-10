@@ -35,8 +35,9 @@ img {
 }
 
 .ant-modal {
-  @apply !w-fit !max-w-3xl mx-2;
-  animation-delay: -1s;
+  @apply !w-[21rem] md:!w-fit !max-w-3xl mx-2;
+
+  animation-duration: 0s !important;
 }
 
 ::ng-deep .ant-modal-wrap,

@@ -29,13 +29,13 @@
   </ng-template>
 
   <ng-template #modalFooter>
-    <div class="flex gap-1 justify-end">
+    <div class="flex flex-col md:flex-row gap-4 justify-end items-end my-2">
       <button
         (click)="handleCancel()"
         nz-button
         nzType="default"
         nzSize="large"
-        class="flex items-center text-primary hover:text-white bg-transparent hover:bg-primary border-primary"
+        class="w-fit flex items-center text-primary hover:text-white bg-transparent hover:bg-primary border-primary"
       >
         <span nz-icon nzType="close" nzTheme="outline"></span>
         Cancel
@@ -46,7 +46,7 @@
         nzDanger
         nzType="primary"
         nzSize="large"
-        class="!border-none flex items-center"
+        class="w-fit !border-none flex items-center !ml-0"
       >
         <span nz-icon nzType="delete" nzTheme="outline"></span>
 

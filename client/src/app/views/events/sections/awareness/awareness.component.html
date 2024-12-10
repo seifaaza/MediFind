@@ -9,8 +9,7 @@
     <div
       *ngFor="let placeholder of placeholders"
       [ngClass]="{
-        'lg:last-of-type:hidden 3xl:last-of-type:flex':
-          !showAllEvents && events.length > 3
+        'lg:last-of-type:hidden 3xl:last-of-type:flex': !showAllEvents
       }"
       class="bg-white/80 flex flex-col gap-4 xl:gap-6 rounded-[0.14rem] animate-pulse w-full"
     >
@@ -182,7 +181,7 @@
       </ng-template>
 
       <ng-template #modalFooter>
-        <div class="flex gap-1 md:gap-2 xl:gap-4 justify-end mt-2 mb-2">
+        <div class="flex flex-col md:flex-row gap-4 justify-end items-end my-2">
           <button
             (click)="openWebsite(selectedEvent?.link)"
             [disabled]="!selectedEvent?.link"

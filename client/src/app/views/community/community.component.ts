@@ -38,7 +38,9 @@ export class CommunityComponent implements OnInit {
   posts: Post[] = [];
   isLoading = false; // Flag to track if posts are being loaded
   isAllPostsLoaded = false; // Flag to check if all posts are loaded
-  placeholders: any[] = new Array(10);
+  placeholders: { height: string }[] = new Array(10).fill({}).map(() => ({
+    height: `${Math.floor(Math.random() * (24 - 10)) + 16}rem`,
+  }));
   skip = 0;
   limit = 10;
 
@@ -98,14 +100,5 @@ export class CommunityComponent implements OnInit {
     } else {
       return format(postDate, "'Yesterday, at' hh:mm a", { locale: enGB }); // Format like "Yesterday, at 7:10 PM"
     }
-  }
-
-  // Function to generate a random height class for skeleton loader
-  getRandomHeight(): string {
-    const minHeight = 16;
-    const maxHeight = 22;
-    const randomHeight =
-      Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
-    return `${randomHeight}rem`; // return height in rem
   }
 }

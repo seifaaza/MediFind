@@ -4,7 +4,7 @@
     <div *ngIf="isLoading" class="gap-x-[1em] lg:columns-2 2xl:columns-3">
       <div
         *ngFor="let placeholder of placeholders"
-        [style.height]="getRandomHeight()"
+        [style.height]="placeholder.height"
         class="bg-white/70 p-6 lg:p-7 xl:p-8 rounded-sm break-inside-avoid mb-2 lg:mb-3 animate-pulse"
       >
         <div class="w-full flex justify-between items-center gap-2">
