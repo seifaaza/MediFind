@@ -26,14 +26,13 @@
   (nzOnCancel)="handleCancel()"
   nzCloseOnNavigation="false"
   nzCentered
-  class="max-w-md"
 >
   <ng-template #modalContent>
-    <h1 class="text-lg text-slate-700 mb-4">Create a Post</h1>
+    <h1 class="text-lg text-slate-700 mb-6">Create a Post</h1>
 
     <div class="flex flex-col-reverse md:flex-row gap-4">
-      <div class="flex flex-col gap-2">
-        <label for="username" class="text-slate-600 text-sm lg:text-[.9rem]"
+      <div class="flex flex-col gap-2 w-full md:w-3/5">
+        <label for="title" class="text-slate-600 text-sm lg:text-[.9rem]"
           >Title</label
         >
         <input
@@ -41,34 +40,58 @@
           nz-input
           placeholder="Add a headline for your post..."
           nzSize="large"
+          [(ngModel)]="title"
           class="text-base text-slate-600"
         />
       </div>
 
-      <div class="flex flex-col gap-2">
-        <label for="username" class="text-slate-600 text-sm lg:text-[.9rem]"
+      <div class="flex flex-col gap-2 w-full md:w-2/5">
+        <label for="category" class="text-slate-600 text-sm lg:text-[.9rem]"
           >Category</label
         >
-        <nz-select
-          nzShowSearch
-          nzAllowClear
-          nzPlaceHolder="Select a person"
-          [(ngModel)]="selectedValue"
+        <button
+          nz-dropdown
+          nzTrigger="click"
+          [nzDropdownMenu]="dropdown"
+          nzPlacement="bottomRight"
+          nz-button
+          nzSize="large"
+          class="!px-4 !bg-slate-50 border-slate-300 !text-slate-500/90 flex gap-1 items-center"
         >
-          <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
-          <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
-          <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
-        </nz-select>
+          <span
+            class="text-sm overflow-hidden text-ellipsis whitespace-nowrap w-full max-w-[120px]"
+          >
+            {{ selectedCategory?.name || "Category" }}
+          </span>
+          <span nz-icon nzType="down"></span>
+        </button>
+
+        <nz-dropdown-menu #dropdown="nzDropdownMenu">
+          <ul nz-menu class="max-h-72 overflow-y-auto">
+            <li
+              nz-menu-item
+              *ngFor="let category of categories"
+              (click)="selectCategory(category)"
+              nz-menu-item
+              class="block py-4 px-5 text-[.9rem] hover:text-primary hover:bg-primary/10 duration-0"
+            >
+              {{ category.name }}
+            </li>
+          </ul>
+        </nz-dropdown-menu>
       </div>
     </div>
-    <div class="flex flex-col gap-2 t-4">
-      <label for="username" class="text-slate-600 text-sm lg:text-[.9rem]"
+
+    <div class="flex flex-col gap-2 mt-4">
+      <label for="content" class="text-slate-600 text-sm lg:text-[.9rem]"
         >Content</label
       >
       <textarea
+        id="content"
         nz-input
         rows="5"
         placeholder="Share the details or ask your question here..."
+        [(ngModel)]="content"
         class="placeholder:text-slate-400/80"
       ></textarea>
     </div>
@@ -87,13 +110,15 @@
         Cancel
       </button>
       <button
-        [disabled]="loading"
+        (click)="createPost()"
+        [disabled]="!isFormValid() || loading"
         nz-button
         nzSize="large"
         class="flex items-center !bg-primary !text-white !border-transparent"
       >
         Submit
-        <span nz-icon nzType="send" nzTheme="outline"></span>
+        <span *ngIf="!loading" nz-icon nzType="send" nzTheme="outline"></span>
+        <span *ngIf="loading" nz-icon nzType="loading" nzTheme="outline"></span>
       </button>
     </div>
   </ng-template>

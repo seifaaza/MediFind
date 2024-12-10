@@ -19,6 +19,11 @@ svg,
 img {
   user-select: none;
 }
+
+input::placeholder {
+  @apply text-xs md:!text-sm;
+}
+
 .fade-in {
   opacity: 0;
   transform: translateY(8px); /* Slide up effect */
@@ -35,7 +40,7 @@ img {
 }
 
 .ant-modal {
-  @apply !w-[21rem] md:!w-fit !max-w-3xl mx-2;
+  @apply mx-2;
 
   animation-duration: 0s !important;
 }

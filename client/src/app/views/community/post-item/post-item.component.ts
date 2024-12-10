@@ -33,8 +33,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./post-item.component.css'],
 })
 export class PostItemComponent implements OnInit {
-  isAuthenticated = false;
   apiUrl = environment.API_URL;
+  isAuthenticated = false;
   id: string | null = null;
   loading = true; // Loading state
   postData: any = null; // Post data
