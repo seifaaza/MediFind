@@ -1,9 +1,12 @@
 <section class="bg-light flex items-center justify-center min-h-screen">
   <div class="px-4 w-full max-w-sm md:max-w-md mx-auto mt-[52.8px]">
     <div class="text-center lg:mt-4">
-      <h1 class="text-xl md:text-2xl text-primary">Register Your Account</h1>
+      <h1 class="text-xl md:text-2xl text-primary">{{ title }}</h1>
 
-      <div class="flex justify-center items-center gap-2 mt-3">
+      <div
+        *ngIf="signInLink"
+        class="flex justify-center items-center gap-2 mt-3"
+      >
         <p class="text-sm lg:text-[.9rem] !leading-relaxed text-slate-500">
           Already have an account?
         </p>
@@ -114,7 +117,7 @@
           class="flex justify-center items-center mt-1"
           [disabled]="signUpForm.invalid || loading"
         >
-          Sign Up
+          {{ redirect === "/profile" ? "Sign Up" : "Next" }}
 
           <span
             *ngIf="!loading"

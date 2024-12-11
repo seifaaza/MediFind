@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -31,6 +31,9 @@ import { AuthService } from '../../../core/services/auth/auth.service';
   styleUrls: ['./sign-up.component.css'],
 })
 export class SignUpComponent {
+  @Input() title: string = 'Register Your Account';
+  @Input() signInLink: boolean = true;
+  @Input() redirect: string = '/profile';
   apiUrl = environment.API_URL;
   signUpForm: FormGroup;
   loading = false;
@@ -71,7 +74,7 @@ export class SignUpComponent {
           this.setAuthCookie(response.token);
 
           // Navigate to profile or other page
-          this.router.navigate(['/profile']);
+          this.router.navigate([this.redirect]);
           this.loading = false;
         },
 
