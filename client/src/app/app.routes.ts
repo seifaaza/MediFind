@@ -23,6 +23,11 @@ import { MentalWellBeingComponent } from './views/topics/categories/mental-well-
 import { AddictionComponent } from './views/topics/categories/addiction/addiction.component';
 import { HealthEssentialsItemComponent } from './views/topics/categories/health-essentials/health-essentials-item/health-essentials-item.component';
 import { PostItemComponent } from './views/community/post-item/post-item.component';
+import { PersonalInfoComponent } from './views/profile/create-profile/steps/personal-info/personal-info.component';
+import { MedicalInfoComponent } from './views/profile/create-profile/steps/medical-info/medical-info.component';
+import { AuthProfileGuard } from './core/guards/authProfile.guard';
+import { AuthNoProfileGuard } from './core/guards/authNoProfile.guard';
+import { NoAuthGuard } from './core/guards/noAuth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -42,18 +47,34 @@ export const routes: Routes = [
     path: 'auth',
     children: [
       { path: '', redirectTo: 'sign-in', pathMatch: 'full' },
-      { path: 'sign-up', component: SignUpComponent },
-      { path: 'sign-in', component: SignInComponent },
+      {
+        path: 'sign-up',
+        component: SignUpComponent,
+        canActivate: [NoAuthGuard],
+      },
+      {
+        path: 'sign-in',
+        component: SignInComponent,
+        canActivate: [NoAuthGuard],
+      },
     ],
   },
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [AuthGuard],
+
     children: [
       { path: '', component: ProfileInfoComponent },
-      { path: 'achievements', component: AchievementsComponent },
-      { path: 'tracker', component: TrackerComponent },
+      {
+        path: 'achievements',
+        component: AchievementsComponent,
+        canActivate: [AuthProfileGuard],
+      },
+      {
+        path: 'tracker',
+        component: TrackerComponent,
+        canActivate: [AuthProfileGuard],
+      },
     ],
   },
   {
@@ -72,7 +93,28 @@ export const routes: Routes = [
       { path: 'addiction', component: AddictionComponent },
     ],
   },
-  { path: 'create-profile', component: CreateProfileComponent },
+  {
+    path: 'create-profile',
+    component: CreateProfileComponent,
+    children: [
+      {
+        path: '',
+        component: SignUpComponent,
+        canActivate: [NoAuthGuard],
+      },
+      {
+        path: 'personal-info',
+        component: PersonalInfoComponent,
+        canActivate: [AuthNoProfileGuard], // AuthGuard applied here
+      },
+      {
+        path: 'medical-info',
+        component: MedicalInfoComponent,
+        canActivate: [AuthNoProfileGuard], // AuthGuard applied here
+      },
+    ],
+  },
+
   { path: 'server-error', component: ErrorComponent },
   { path: '**', component: NotFoundComponent },
 ];

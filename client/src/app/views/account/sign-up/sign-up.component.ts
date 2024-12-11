@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,6 +14,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { environment } from '../../../../environments/environment.prod';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { BackComponent } from '../../../core/components/buttons/back/back.component';
 
 @Component({
   selector: 'app-sign-up',
@@ -26,14 +27,13 @@ import { AuthService } from '../../../core/services/auth/auth.service';
     NzButtonModule,
     NzIconModule,
     NzAlertModule,
+    BackComponent,
   ],
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css'],
 })
 export class SignUpComponent {
-  @Input() title: string = 'Register Your Account';
-  @Input() signInLink: boolean = true;
-  @Input() redirect: string = '/profile';
+  isCreateProfile: boolean = false;
   apiUrl = environment.API_URL;
   signUpForm: FormGroup;
   loading = false;
@@ -52,6 +52,14 @@ export class SignUpComponent {
       email: ['', [Validators.required, Validators.email]], // Email field with validation
       password: ['', [Validators.required]],
     });
+  }
+
+  ngOnInit(): void {
+    this.checkIfCreateProfile();
+  }
+
+  private checkIfCreateProfile(): void {
+    this.isCreateProfile = this.router.url === '/create-profile';
   }
 
   setAuthCookie(token: string): void {
@@ -74,7 +82,7 @@ export class SignUpComponent {
           this.setAuthCookie(response.token);
 
           // Navigate to profile or other page
-          this.router.navigate([this.redirect]);
+          this.router.navigate(['/create-profile/personal-info']);
           this.loading = false;
         },
 

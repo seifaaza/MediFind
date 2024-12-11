@@ -3,6 +3,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-hero-section',
@@ -18,8 +19,22 @@ export class HeroSectionComponent implements AfterViewInit {
     { value: 5000, text: 'Active Community Members' },
     { value: 1000, text: 'Daily Health Logs' },
   ];
+  getStartedRoute = '/create-profile';
+  isAuthenticated = false;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  constructor(
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    // Check if the user is authenticated
+    this.isAuthenticated = this.authService.isAuthenticated();
+    if (this.isAuthenticated) {
+      this.getStartedRoute = '/create-profile/personal-info';
+    }
+  }
 
   ngAfterViewInit(): void {
     // Apply rolling text effect

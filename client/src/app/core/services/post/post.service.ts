@@ -11,7 +11,6 @@ interface Post {
   author_username: string;
   num_comments: number;
 }
-
 @Injectable({
   providedIn: 'root',
 })
@@ -25,6 +24,13 @@ export class PostsService {
     if (!currentPosts.find((existingPost) => existingPost.id === post.id)) {
       this.postsSubject.next([post, ...currentPosts]);
     }
+  }
+
+  // Remove a post by ID
+  removePost(postId: number): void {
+    const currentPosts = this.postsSubject.getValue();
+    const updatedPosts = currentPosts.filter((post) => post.id !== postId);
+    this.postsSubject.next(updatedPosts);
   }
 
   // Set the initial posts list

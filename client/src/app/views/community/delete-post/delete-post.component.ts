@@ -6,6 +6,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { PostsService } from '../../../core/services/post/post.service';
 
 @Component({
   selector: 'app-delete-post',
@@ -24,7 +25,8 @@ export class DeletePostComponent {
   constructor(
     private http: HttpClient, // Inject HttpClient
     private authService: AuthService, // Inject AuthService
-    private message: NzMessageService
+    private message: NzMessageService,
+    private postsService: PostsService
   ) {}
 
   showModal(): void {
@@ -46,6 +48,9 @@ export class DeletePostComponent {
       .delete(`${this.apiUrl}/post/${this.postId}`, { headers })
       .subscribe({
         next: () => {
+          this.postsService.removePost(this.postId); // Remove the post from service
+          this.postDeleted.emit(this.postId); // Notify parent component
+
           this.isVisible = false; // Close the modal
           this.loading = false; // Hide loading icon
           this.postDeleted.emit(this.postId);
