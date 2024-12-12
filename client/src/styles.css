@@ -79,3 +79,6 @@ input::placeholder {
 .ant-input-number-input {
   @apply h-full !important;
 }
+.ant-select-selection-placeholder {
+  @apply text-sm leading-[1.75] !important;
+}

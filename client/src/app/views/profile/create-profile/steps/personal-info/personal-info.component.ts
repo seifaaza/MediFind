@@ -12,6 +12,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
 
 @Component({
   selector: 'app-personal-info',
@@ -29,15 +31,21 @@ import { AuthService } from '../../../../../core/services/auth/auth.service';
     FormsModule,
     NzInputNumberModule,
     NzDatePickerModule,
+    NzSpaceModule,
   ],
   templateUrl: './personal-info.component.html',
-  styleUrl: './personal-info.component.css',
+  styleUrls: ['./personal-info.component.css'],
 })
 export class PersonalInfoComponent {
   isAuthenticated = false;
   apiUrl = environment.API_URL;
   loading = false;
   errorMessage = '';
+  value = 100;
+  date: Date | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(private i18n: NzI18nService) {}
+  ngOnInit() {
+    this.i18n.setLocale(en_US);
+  }
 }

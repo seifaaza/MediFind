@@ -1,3 +1,6 @@
 .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
-  height: 57px !important;
+  @apply h-[57px] !important;
+}
+.ant-picker {
+  @apply h-full !important;
 }

@@ -32,34 +32,56 @@
                 >Birthday</label
               >
               <nz-date-picker
-                ngModel="date"
+                [(ngModel)]="date"
+                nzShowToday="false"
                 placeholder="Enter your birthday"
                 nzSize="large"
                 class="text-sm lg:text-base placeholder:text-slate-400/80"
               ></nz-date-picker>
             </div>
           </div>
-          <!-- Height and width fields -->
+          <!-- Height and weight fields -->
           <div class="flex flex-col md:flex-row gap-4">
             <div class="flex flex-col gap-2 md:w-1/2">
               <label for="height" class="text-slate-600 text-sm lg:text-[.9rem]"
                 >Height</label
               >
-              <nz-input-number
-                [nzMin]="1"
-                [nzMax]="10"
-                [nzStep]="1"
-              ></nz-input-number>
+
+              <nz-space id="height" nzDirection="vertical" style="width: 100%">
+                <nz-input-number-group [nzAddOnBefore]="heightTemplate">
+                  <nz-input-number
+                    [(ngModel)]="value"
+                    [nzStep]="1"
+                    [nzPlaceHolder]="'Enter your height here'"
+                  ></nz-input-number>
+                </nz-input-number-group>
+                <ng-template #heightTemplate>
+                  <nz-select style="min-width: 80px">
+                    <nz-option nzLabel="Cm" nzValue="cm"></nz-option>
+                    <nz-option nzLabel="Inches" nzValue="inches"></nz-option>
+                  </nz-select>
+                </ng-template>
+              </nz-space>
             </div>
             <div class="flex flex-col gap-2 md:w-1/2">
-              <label for="width" class="text-slate-600 text-sm lg:text-[.9rem]"
-                >Width</label
+              <label for="weight" class="text-slate-600 text-sm lg:text-[.9rem]"
+                >Weight</label
               >
-              <nz-input-number
-                [nzMin]="1"
-                [nzMax]="10"
-                [nzStep]="1"
-              ></nz-input-number>
+              <nz-space id="weight" nzDirection="vertical" style="width: 100%">
+                <nz-input-number-group [nzAddOnBefore]="weightTemplate">
+                  <nz-input-number
+                    [(ngModel)]="value"
+                    [nzStep]="0.5"
+                    [nzPlaceHolder]="'Enter your weight here'"
+                  ></nz-input-number>
+                </nz-input-number-group>
+                <ng-template #weightTemplate>
+                  <nz-select style="min-width: 60px">
+                    <nz-option nzLabel="Kg" nzValue="kg"></nz-option>
+                    <nz-option nzLabel="lbs" nzValue="lbs"></nz-option>
+                  </nz-select>
+                </ng-template>
+              </nz-space>
             </div>
           </div>
 
