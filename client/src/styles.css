@@ -57,3 +57,25 @@ input::placeholder {
 ::ng-deep .ant-modal-content {
   animation: none !important; /* Disable content animation */
 }
+
+.ant-select-item {
+  @apply block py-4 px-5 hover:text-primary hover:bg-primary/10 duration-0  !important;
+}
+/* .cdk-overlay-pane */
+.ant-select-dropdown {
+  @apply h-[124px] !important;
+}
+.cdk-virtual-scroll-viewport {
+  @apply h-[116px] !important;
+}
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled),
+.ant-dropdown-menu-item-selected {
+  @apply font-normal text-primary bg-primary/5 !important;
+}
+.ant-input-number {
+  @apply h-[57px] w-full !important;
+}
+.ant-input-number-input-wrap,
+.ant-input-number-input {
+  @apply h-full !important;
+}

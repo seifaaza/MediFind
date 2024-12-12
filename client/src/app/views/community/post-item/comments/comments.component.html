@@ -128,7 +128,7 @@
                 nzType="like"
                 nzTheme="fill"
                 [ngClass]="{ '!text-primary': comment.isLiked }"
-                class="text-slate-400 group-hover:text-primary !text-lg"
+                class="text-slate-400 group-hover:text-slate-400/80 !text-lg"
               ></span>
             </button>
             <p class="text-slate-500 font-medium">{{ comment.likes_count }}</p>
@@ -145,7 +145,7 @@
                 nzType="dislike"
                 nzTheme="fill"
                 [ngClass]="{ '!text-primary': comment.isDisliked }"
-                class="text-slate-400 group-hover:text-primary !text-lg"
+                class="text-slate-400 group-hover:text-slate-400/80 !text-lg"
               ></span>
             </button>
             <p class="text-slate-500 font-medium">

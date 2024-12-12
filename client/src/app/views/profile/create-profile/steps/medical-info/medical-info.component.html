@@ -1,6 +1,55 @@
 <section>
   <app-back></app-back>
-  <div class="mt-6">
-    <p>medical-info works!</p>
+  <div class="flex items-center justify-center">
+    <div class="px-4 w-full max-w-sm md:max-w-lg mx-auto mt-[52.8px]">
+      <div class="text-center lg:mt-4">
+        <h1 class="text-xl md:text-2xl text-primary">
+          Sign Up and Create Your Profile
+        </h1>
+      </div>
+
+      <div class="mt-8 lg:mt-10 xl:mt-12 w-full">
+        <form class="flex flex-col gap-4">
+          <!-- Gender and birthday fields -->
+
+          <div class="flex flex-col gap-2 md:w-1/2">
+            <label for="gender" class="text-slate-600 text-sm lg:text-[.9rem]"
+              >Gender</label
+            >
+            <input
+              id="username"
+              nz-input
+              placeholder="Type your username"
+              nzSize="large"
+              class="text-sm lg:text-base placeholder:text-slate-400/80"
+            />
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            nz-button
+            nzType="primary"
+            nzSize="large"
+            class="flex justify-center items-center mt-4 xl:mt-6"
+            [disabled]="loading"
+          >
+            Submit
+
+            <span
+              *ngIf="!loading"
+              nz-icon
+              nzType="arrow-right"
+              nzTheme="outline"
+            ></span>
+            <span
+              *ngIf="loading"
+              nz-icon
+              nzType="loading"
+              nzTheme="outline"
+            ></span>
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 </section>

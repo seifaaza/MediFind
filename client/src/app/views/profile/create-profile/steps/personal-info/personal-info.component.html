@@ -1,86 +1,92 @@
 <section>
   <app-back></app-back>
-  <div class="mt-6">
-    <div class="flex items-center justify-center">
-      <div class="px-4 w-full max-w-sm md:max-w-lg mx-auto mt-[52.8px]">
-        <div class="text-center lg:mt-4">
-          <h1 class="text-xl md:text-2xl text-primary">
-            Sign Up and Create Your Profile
-          </h1>
-        </div>
+  <div class="flex items-center justify-center">
+    <div class="px-4 w-full max-w-sm md:max-w-lg mx-auto mt-[52.8px]">
+      <div class="text-center lg:mt-4">
+        <h1 class="text-xl md:text-2xl text-primary">
+          Sign Up and Create Your Profile
+        </h1>
+      </div>
 
-        <div class="my-6 w-full">
-          <form class="flex flex-col gap-4">
-            <!-- Username Field -->
-            <div class="flex flex-col md:flex-row gap-4">
-              <div class="flex flex-col gap-2 md:w-1/2">
-                <label
-                  for="username"
-                  class="text-slate-600 text-sm lg:text-[.9rem]"
-                  >Username</label
-                >
-                <nz-select
-                  ngModel="lucy"
-                  nzAllowClear
-                  nzPlaceHolder="Choose"
-                  class="h-full text-sm lg:text-base placeholder:text-slate-400/80"
-                >
-                  <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
-                  <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
-                  <nz-option
-                    nzValue="disabled"
-                    nzLabel="Disabled"
-                    nzDisabled
-                  ></nz-option>
-                </nz-select>
-              </div>
-              <div class="flex flex-col gap-2 md:w-1/2">
-                <label
-                  for="username"
-                  class="text-slate-600 text-sm lg:text-[.9rem]"
-                  >Username</label
-                >
-                <input
-                  nzStatus="warning"
-                  id="username"
-                  nz-input
-                  placeholder="Type your username"
-                  nzSize="large"
-                  class="text-sm lg:text-base placeholder:text-slate-400/80"
-                />
-              </div>
+      <div class="mt-8 lg:mt-10 xl:mt-12 w-full">
+        <form class="flex flex-col gap-4">
+          <!-- Gender and birthday fields -->
+          <div class="flex flex-col md:flex-row gap-4">
+            <div class="flex flex-col gap-2 md:w-1/2">
+              <label for="gender" class="text-slate-600 text-sm lg:text-[.9rem]"
+                >Gender</label
+              >
+              <nz-select
+                nzAllowClear
+                nzPlaceHolder="Select your gender"
+                class="h-full text-sm lg:text-base placeholder:text-slate-400/80"
+              >
+                <nz-option nzValue="male" nzLabel="Male"></nz-option>
+                <nz-option nzValue="female" nzLabel="Female"></nz-option>
+              </nz-select>
             </div>
+            <div class="flex flex-col gap-2 md:w-1/2">
+              <label
+                for="birthday"
+                class="text-slate-600 text-sm lg:text-[.9rem]"
+                >Birthday</label
+              >
+              <nz-date-picker
+                ngModel="date"
+                placeholder="Enter your birthday"
+                nzSize="large"
+                class="text-sm lg:text-base placeholder:text-slate-400/80"
+              ></nz-date-picker>
+            </div>
+          </div>
+          <!-- Height and width fields -->
+          <div class="flex flex-col md:flex-row gap-4">
+            <div class="flex flex-col gap-2 md:w-1/2">
+              <label for="height" class="text-slate-600 text-sm lg:text-[.9rem]"
+                >Height</label
+              >
+              <nz-input-number
+                [nzMin]="1"
+                [nzMax]="10"
+                [nzStep]="1"
+              ></nz-input-number>
+            </div>
+            <div class="flex flex-col gap-2 md:w-1/2">
+              <label for="width" class="text-slate-600 text-sm lg:text-[.9rem]"
+                >Width</label
+              >
+              <nz-input-number
+                [nzMin]="1"
+                [nzMax]="10"
+                [nzStep]="1"
+              ></nz-input-number>
+            </div>
+          </div>
 
-            <!-- Error Message -->
-            <p class="text-red-500 text-center">
-              {{ errorMessage }}
-            </p>
+          <!-- Submit Button -->
+          <button
+            nz-button
+            nzType="primary"
+            nzSize="large"
+            class="flex justify-center items-center mt-4 xl:mt-6"
+            [disabled]="loading"
+          >
+            Next
 
-            <!-- Submit Button -->
-            <button
-              nz-button
-              nzType="primary"
-              nzSize="large"
-              class="flex justify-center items-center mt-1"
-              [disabled]="loading"
-            >
-              Next
-
-              <span
-                *ngIf="!loading"
-                nz-icon
-                nzType="arrow-right"
-                nzTheme="outline"
-              ></span>
-              <span
-                *ngIf="loading"
-                nz-icon
-                nzType="loading"
-                nzTheme="outline"
-              ></span>
-            </button>
-          </form>
-        </div>
+            <span
+              *ngIf="!loading"
+              nz-icon
+              nzType="arrow-right"
+              nzTheme="outline"
+            ></span>
+            <span
+              *ngIf="loading"
+              nz-icon
+              nzType="loading"
+              nzTheme="outline"
+            ></span>
+          </button>
+        </form>
       </div>
     </div>
   </div>
