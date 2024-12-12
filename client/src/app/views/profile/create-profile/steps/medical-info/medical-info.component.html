@@ -1,30 +1,78 @@
 <section>
   <app-back></app-back>
   <div class="flex items-center justify-center">
-    <div class="px-4 w-full max-w-sm md:max-w-lg mx-auto mt-[52.8px]">
-      <div class="text-center lg:mt-4">
+    <div class="px-4 w-full max-w-sm md:max-w-lg mx-auto mt-4 2xl:mt-10">
+      <div class="text-center">
         <h1 class="text-xl md:text-2xl text-primary">
-          Sign Up and Create Your Profile
+          Your Medical Information
         </h1>
       </div>
 
       <div class="mt-8 lg:mt-10 xl:mt-12 w-full">
         <form class="flex flex-col gap-4">
-          <!-- Gender and birthday fields -->
-
-          <div class="flex flex-col gap-2 md:w-1/2">
+          <div class="flex flex-col gap-2">
             <label for="gender" class="text-slate-600 text-sm lg:text-[.9rem]"
-              >Gender</label
+              >Medications</label
             >
-            <input
-              id="username"
-              nz-input
-              placeholder="Type your username"
+            <nz-select
               nzSize="large"
-              class="text-sm lg:text-base placeholder:text-slate-400/80"
-            />
+              nzMode="tags"
+              nzAllowClear="true"
+              nzNotFoundContent="Type to select or add your medications (e.g., Aspirin, Paracetamol, etc.)"
+              nzPlaceHolder="Type to select your medications"
+              class="ant-select-multiple text-sm lg:text-base placeholder:text-slate-400"
+            >
+            </nz-select>
           </div>
+          <div class="flex flex-col gap-2">
+            <label
+              for="allergies"
+              class="text-slate-600 text-sm lg:text-[.9rem]"
+            >
+              Allergies
+            </label>
 
+            <nz-select
+              nzSize="large"
+              nzMode="multiple"
+              nzAllowClear="true"
+              nzNotFoundContent="Allergy Not Found"
+              nzPlaceHolder="Type to select your allergies"
+              [(ngModel)]="selectedAllergiesIds"
+              (ngModelChange)="onAllergiesChange($event)"
+              class="text-sm lg:text-base placeholder:text-slate-400"
+            >
+              <nz-option
+                *ngFor="let allergy of allergies"
+                [nzLabel]="allergy.name"
+                [nzValue]="allergy.id"
+              ></nz-option>
+            </nz-select>
+          </div>
+          <div class="flex flex-col gap-2 mt-4">
+            <label
+              for="healthGoals"
+              class="text-slate-600 text-sm lg:text-[.9rem]"
+              >Health Goals</label
+            >
+            <nz-select
+              [(ngModel)]="selectedHealthGoalsIds"
+              nzSize="large"
+              nzMode="multiple"
+              nzAllowClear="true"
+              nzNotFoundContent="Not Found"
+              nzPlaceHolder="Type to select your health goals"
+              class="text-sm lg:text-base placeholder:text-slate-400"
+              (ngModelChange)="onHealthGoalsChange($event)"
+            >
+              <nz-option
+                *ngFor="let goal of healthGoals"
+                [nzValue]="goal.id"
+                [nzLabel]="goal.name"
+              >
+              </nz-option>
+            </nz-select>
+          </div>
           <!-- Submit Button -->
           <button
             nz-button

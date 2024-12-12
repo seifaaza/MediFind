@@ -61,10 +61,7 @@ input::placeholder {
 .ant-select-item {
   @apply block py-4 px-5 hover:text-primary hover:bg-primary/10 duration-0  !important;
 }
-/* .cdk-overlay-pane */
-.ant-select-dropdown {
-  @apply h-[124px] !important;
-}
+
 .cdk-virtual-scroll-viewport {
   @apply h-[116px] !important;
 }
@@ -81,4 +78,17 @@ input::placeholder {
 }
 .ant-select-selection-placeholder {
   @apply text-sm leading-[1.75] !important;
+}
+.ant-select-multiple .ant-select-selector {
+  @apply py-[.8rem] px-3 !important;
+}
+.ant-select-multiple .ant-select-selection-item {
+  @apply flex items-center mr-3 text-sm !important;
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  @apply transition-none !important;
+}
+.cdk-virtual-scroll-viewport.cdk-virtual-scrollable.cdk-virtual-scroll-orientation-vertical {
+  @apply h-52 !important;
 }
