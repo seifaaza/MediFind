@@ -1,3 +1,11 @@
 <div class="w-full h-full">
-  <p>profile-info works!</p>
+  <div *ngIf="hasProfile === true; else noProfile">
+    <p>Welcome to your profile!</p>
+    <!-- Add profile-specific content here -->
+  </div>
+
+  <ng-template #noProfile>
+    <p>You don’t have a profile yet. Please create one to get started!</p>
+    <button>Create Profile</button>
+  </ng-template>
 </div>

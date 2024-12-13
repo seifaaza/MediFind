@@ -116,6 +116,10 @@ export class MedicalInfoComponent implements OnInit {
     sessionStorage.setItem('profileData', JSON.stringify(profileData));
   }
 
+  setAuthCookie(token: string): void {
+    this.authService.setToken(token); // Use AuthService to save token
+  }
+
   // Method to handle the form submission
   onSubmit() {
     const profileData = {
@@ -137,7 +141,8 @@ export class MedicalInfoComponent implements OnInit {
     this.http
       .post(`${this.apiUrl}/profile`, profileData, { headers })
       .subscribe({
-        next: () => {
+        next: (response: any) => {
+          this.setAuthCookie(response.token);
           this.loading = false;
           this.router.navigate(['/profile']);
           sessionStorage.clear();
