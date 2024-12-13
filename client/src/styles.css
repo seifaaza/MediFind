@@ -89,6 +89,3 @@ input::placeholder {
 .ant-select:not(.ant-select-customize-input) .ant-select-selector {
   @apply transition-none !important;
 }
-.cdk-virtual-scroll-viewport.cdk-virtual-scrollable.cdk-virtual-scroll-orientation-vertical {
-  @apply h-52 !important;
-}

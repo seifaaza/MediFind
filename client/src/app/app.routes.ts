@@ -64,7 +64,7 @@ export const routes: Routes = [
     component: ProfileComponent,
 
     children: [
-      { path: '', component: ProfileInfoComponent },
+      { path: '', component: ProfileInfoComponent, canActivate: [AuthGuard] },
       {
         path: 'achievements',
         component: AchievementsComponent,

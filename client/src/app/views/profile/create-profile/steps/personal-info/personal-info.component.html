@@ -1,5 +1,18 @@
 <section>
-  <app-back></app-back>
+  <div class="flex justify-between items-center">
+    <app-back></app-back>
+    <button
+    [disabled]="!isFormEmpty()"
+    (click)="clearSessionAndNavigate()"
+      nz-button
+      nzType="primary"
+      nzSize="large"
+      class="flex justify-center items-center"
+    >
+      Skip
+      <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+    </button>
+  </div>
   <div class="flex items-center justify-center">
     <div class="px-4 w-full max-w-sm md:max-w-lg mx-auto mt-4 2xl:mt-10">
       <div class="text-center lg:mt-4">
@@ -30,6 +43,7 @@
                 formControlName="gender"
                 nzAllowClear
                 nzPlaceHolder="Select your gender"
+                class="gender-dropdown"
               >
                 <nz-option nzValue="male" nzLabel="Male"></nz-option>
                 <nz-option nzValue="female" nzLabel="Female"></nz-option>
@@ -44,9 +58,7 @@
               <nz-date-picker
                 [nzStatus]="
                   form.controls['birthday'].invalid &&
-                  form.controls['birthday'].touched &&
-                  form.get('birthday')?.value &&
-                  form.get('birthday')?.invalid
+                  form.controls['birthday'].touched
                     ? 'error'
                     : ''
                 "
@@ -61,19 +73,15 @@
           <!-- Height and weight fields -->
           <div class="flex flex-col md:flex-row gap-4">
             <div class="flex flex-col gap-2 md:w-1/2">
-              <label
-                for="height"
-                class="text-slate-600 text-sm lg:text-[.9rem]"
+              <label for="height" class="text-slate-600 text-sm lg:text-[.9rem]"
+                >Height</label
               >
-                Height
-              </label>
               <nz-space id="height" nzDirection="vertical" style="width: 100%">
                 <nz-input-number-group [nzAddOnBefore]="heightTemplate">
                   <nz-input-number
                     [nzStatus]="
                       form.get('height')?.touched &&
                       form.get('height')?.value !== null &&
-                      form.get('height')?.value !== '' &&
                       form.get('height')?.invalid
                         ? 'error'
                         : ''
@@ -82,12 +90,11 @@
                     [nzMin]="selectedUnitHeight === 'cm' ? 30 : 12"
                     [nzStep]="1"
                     [nzPlaceHolder]="'Enter your height here'"
-                    (ngModelChange)="onHeightChange($event)"
-                  ></nz-input-number>
+                  >
+                  </nz-input-number>
                 </nz-input-number-group>
                 <ng-template #heightTemplate>
                   <nz-select
-                    (ngModelChange)="onHeightUnitChange($event)"
                     formControlName="heightUnit"
                     style="min-width: 80px"
                   >
@@ -108,7 +115,6 @@
                     [nzStatus]="
                       form.get('weight')?.touched &&
                       form.get('weight')?.value !== null &&
-                      form.get('weight')?.value !== '' &&
                       form.get('weight')?.invalid
                         ? 'error'
                         : ''
@@ -116,11 +122,11 @@
                     formControlName="weight"
                     [nzStep]="0.5"
                     [nzPlaceHolder]="'Enter your weight here'"
-                  ></nz-input-number>
+                  >
+                  </nz-input-number>
                 </nz-input-number-group>
                 <ng-template #weightTemplate>
                   <nz-select
-                    (ngModelChange)="onWeightUnitChange($event)"
                     formControlName="weightUnit"
                     style="min-width: 80px"
                   >
@@ -134,15 +140,13 @@
 
           <!-- Submit Button -->
           <button
-            [routerLink]="'/create-profile/medical-info'"
+            [disabled]="loading || !form.valid || isFormEmpty()"
             nz-button
             nzType="primary"
             nzSize="large"
             class="flex justify-center items-center mt-4 xl:mt-6"
-            [disabled]="loading"
           >
             Next
-
             <span
               *ngIf="!loading"
               nz-icon

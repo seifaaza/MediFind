@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BackComponent } from '../../../../../core/components/buttons/back/back.component';
 import { environment } from '../../../../../../environments/environment.prod';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -17,7 +17,6 @@ import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { AuthService } from '../../../../../core/services/auth/auth.service';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
 import { FormService } from '../../../../../core/services/profile/form.service';
@@ -55,23 +54,33 @@ export class PersonalInfoComponent {
   weight: number | null = null;
   height: number | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private i18n: NzI18nService,
-    private formService: FormService
-  ) {
+  private fb = inject(FormBuilder);
+  private i18n = inject(NzI18nService);
+  private formService = inject(FormService);
+
+  constructor(private router: Router) {
     this.form = this.fb.group({
       gender: [null],
-      birthday: [null, [Validators.required, this.ageValidator]],
-      height: [null, [Validators.required, Validators.min(50)]], // Default value for height
-      weight: [null, [Validators.required, Validators.min(40)]], // Default value for weight
-      heightUnit: ['cm'], // Default unit for height
-      weightUnit: ['kg'], // Default unit for weight
+      birthday: [null, [this.ageValidator]],
+      height: [null, [Validators.min(50)]],
+      weight: [null, [Validators.min(40)]],
+      heightUnit: ['cm'],
+      weightUnit: ['kg'],
     });
   }
 
   ngOnInit() {
     this.i18n.setLocale(en_US);
+
+    // Retrieve stored form data from sessionStorage if it exists
+    const storedData = this.formService.getFormData('profileData');
+    if (storedData) {
+      // Convert the birthday string to a Date object
+      if (storedData.birthday) {
+        storedData.birthday = new Date(storedData.birthday);
+      }
+      this.form.patchValue(storedData);
+    }
   }
 
   // Custom validator to check if the date is more than 10 years ago
@@ -79,13 +88,13 @@ export class PersonalInfoComponent {
     const dateOfBirth = control.value;
     if (dateOfBirth) {
       const today = new Date();
-      let age = today.getFullYear() - dateOfBirth.getFullYear();
+      const age = today.getFullYear() - dateOfBirth.getFullYear();
       const month = today.getMonth() - dateOfBirth.getMonth();
       if (
         month < 0 ||
         (month === 0 && today.getDate() < dateOfBirth.getDate())
       ) {
-        age--;
+        return { minAge: true };
       }
       return age >= 10 ? null : { minAge: true };
     }
@@ -95,39 +104,46 @@ export class PersonalInfoComponent {
   // Method to handle form submission
   onSubmit() {
     if (this.form.valid) {
-      // Set the form data in the service
-      this.formService.setFormData('date_of_birth', this.form.value.birthday);
-      this.formService.setFormData('gender', this.form.value.gender);
-      this.formService.setFormData('height', this.form.value.height);
-      this.formService.setFormData('weight', this.form.value.weight);
+      const formData = {
+        gender: this.form.value.gender,
+        date_of_birth: this.form.value.birthday,
+        height: this.form.value.height,
+        weight: this.form.value.weight,
+      };
+      // Storing the personal info in sessionStorage
+      this.formService.setFormData('profileData', formData);
 
-      console.log('Form data saved:', this.formService.getFormData());
-
-      // Call submit method (replace this with actual submission logic)
-      this.formService.submitFormData();
+      this.router.navigate(['/create-profile/medical-info']);
     } else {
       console.log('Form is invalid');
     }
   }
 
-  // Unit change for height
-  onHeightUnitChange(unit: string) {
+  // Update height and weight unit
+  onHeightChange(unit: string) {
     this.selectedUnitHeight = unit;
-    this.form.get('heightUnit')?.setValue(unit); // Update form control
+    this.form.get('heightUnit')?.setValue(unit);
   }
 
-  // Update height and weight when inputs are changed// Update height value when input changes
-  onHeightChange(value: number) {
-    this.height = value;
-  }
-
-  // Unit change for weight
-  onWeightUnitChange(unit: string) {
+  onWeightChange(unit: string) {
     this.selectedUnitWeight = unit;
-    this.form.get('weightUnit')?.setValue(unit); // Update form control
+    this.form.get('weightUnit')?.setValue(unit);
   }
 
-  onWeightChange(value: number) {
-    this.weight = value;
+  // Check if all fields are empty
+  isFormEmpty(): boolean {
+    const requiredFields = ['gender', 'birthday', 'height', 'weight'];
+    return requiredFields.every(
+      (key) =>
+        this.form.get(key)?.value === null || this.form.get(key)?.value === ''
+    );
+  }
+
+  clearSessionAndNavigate(): void {
+    // Clear sessionStorage
+    sessionStorage.clear();
+
+    // Navigate to the medicines page
+    this.router.navigate(['/create-profile/medical-info']);
   }
 }

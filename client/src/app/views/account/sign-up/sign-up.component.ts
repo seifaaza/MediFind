@@ -78,7 +78,6 @@ export class SignUpComponent {
       // Include email in the payload
       .subscribe({
         next: (response: any) => {
-          console.log('Register successful', response);
           this.setAuthCookie(response.token);
 
           // Navigate to profile or other page

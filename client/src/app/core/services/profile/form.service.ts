@@ -4,28 +4,16 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class FormService {
-  private formData: any = {};
+  private formDataKey: string = 'profileData'; // key to store in sessionStorage
 
-  // Method to set data
-  setFormData(key: string, value: any) {
-    this.formData[key] = value;
+  setFormData(key: string, data: any) {
+    // Store form data in sessionStorage
+    sessionStorage.setItem(key, JSON.stringify(data));
   }
 
-  // Method to get data
-  getFormData() {
-    return this.formData;
-  }
-
-  // Method to clear data (optional)
-  clearFormData() {
-    this.formData = {};
-  }
-
-  // Method to submit data (placeholder for HTTP request)
-  submitFormData() {
-    console.log('Submitting form data:', this.formData);
-    // Replace with HTTP request to the API
-    // Example:
-    // return this.http.post('your-api-endpoint', this.formData);
+  getFormData(key: string) {
+    // Retrieve form data from sessionStorage
+    const storedData = sessionStorage.getItem(key);
+    return storedData ? JSON.parse(storedData) : null;
   }
 }

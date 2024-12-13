@@ -210,6 +210,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.isAuthenticated = false; // Update the authentication state
     this.router.navigate(['/']); // Redirect to the home page or sign-in page
     this.closeMenu();
+    sessionStorage.clear();
   }
 
   navigateToSignIn(): void {
