@@ -1,11 +1,66 @@
 <div class="w-full h-full">
+  <ng-template #noProfile>
+    <div
+      class="flex flex-col justify-center items-center gap-6 my-8 md:my-16 lg:my-24 xl:my-28 2xl:my-32"
+    >
+      <lord-icon
+        #lordIcon
+        src="https://cdn.lordicon.com/wjyqkiew.json"
+        trigger="in"
+        stroke="light"
+        state="in-reveal"
+        colors="primary:#64748b,secondary:#0894ff"
+        style="width: 150px; height: 150px"
+      >
+      </lord-icon>
+
+      <h2 class="text-slate-600 text-base max-w-lg text-center mt-2">
+        Create your profile to unlock personalized features and exclusive
+        content!
+      </h2>
+
+      <button
+        [routerLink]="'/create-profile/personal-info'"
+        nz-button
+        nzType="primary"
+        nzSize="large"
+        class="flex justify-center items-center"
+      >
+        Create Profile
+        <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+      </button>
+    </div>
+  </ng-template>
   <div *ngIf="hasProfile === true; else noProfile">
     <p>Welcome to your profile!</p>
-    <!-- Add profile-specific content here -->
-  </div>
+    <lord-icon
+      #lordIcon
+      src="https://cdn.lordicon.com/kdduutaw.json"
+      trigger="in"
+      stroke="light"
+      state="in-reveal"
+      colors="primary:#64748b,secondary:#0894ff"
+      style="width: 110px; height: 110px"
+    >
+    </lord-icon>
 
-  <ng-template #noProfile>
-    <p>You don’t have a profile yet. Please create one to get started!</p>
-    <button>Create Profile</button>
-  </ng-template>
+    <div *ngIf="loading" class="loading-spinner">Loading profile data...</div>
+
+    <div *ngIf="!loading">
+      <div *ngIf="hasProfile; else noProfile">
+        <h3>Your Profile</h3>
+        <p><strong>Date of Birth:</strong> {{ profileData?.date_of_birth }}</p>
+        <p><strong>Gender:</strong> {{ profileData?.gender }}</p>
+        <p><strong>Weight:</strong> {{ profileData?.weight }} kg</p>
+        <p><strong>Height:</strong> {{ profileData?.height }} cm</p>
+        <p>
+          <strong>Allergies:</strong> {{ profileData?.allergies.join(", ") }}
+        </p>
+        <p>
+          <strong>Health Goals:</strong>
+          {{ profileData?.health_goals.join(", ") }}
+        </p>
+      </div>
+    </div>
+  </div>
 </div>

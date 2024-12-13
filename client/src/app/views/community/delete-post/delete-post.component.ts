@@ -23,8 +23,8 @@ export class DeletePostComponent {
   loading = false;
 
   constructor(
-    private http: HttpClient, // Inject HttpClient
-    private authService: AuthService, // Inject AuthService
+    private http: HttpClient,
+    private authService: AuthService,
     private message: NzMessageService,
     private postsService: PostsService
   ) {}
