@@ -7,25 +7,33 @@ import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { environment } from '../../../../../environments/environment.prod';
-
+import { Subscription } from 'rxjs';
+import { RecommendationsService } from '../../../../core/services/profile/recommendations.service';
 @Component({
   selector: 'app-profile-info',
   standalone: true,
   imports: [CommonModule, NzButtonComponent, NzIconModule, RouterModule],
   templateUrl: './profile-info.component.html',
-  styleUrl: './profile-info.component.css',
+  styleUrls: ['./profile-info.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ProfileInfoComponent {
   apiUrl = environment.API_URL;
   hasProfile: boolean | null = null;
   loading: boolean = true;
-  profileData: any = null; // Store profile data here
+  profileData: any = null; // Store profile data
+  username: string | null = null;
+  categories: string[] = [];
+  activityRecommendations: string[] = [];
+  nutritionRecommendations: string[] = [];
+
+  private usernameSubscription: Subscription | null = null;
 
   constructor(
     private authService: AuthService,
     private http: HttpClient,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private recommendationsService: RecommendationsService
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +44,11 @@ export class ProfileInfoComponent {
       } else {
         this.loading = false; // No need to load profile if it doesn't exist
       }
+      this.usernameSubscription = this.authService
+        .getUsername()
+        .subscribe((username) => {
+          this.username = username;
+        });
     });
   }
 
@@ -46,8 +59,26 @@ export class ProfileInfoComponent {
 
     this.http.get(`${this.apiUrl}/profile`, { headers }).subscribe({
       next: (data) => {
+
+
         this.profileData = data;
         this.loading = false;
+
+        if (this.profileData) {
+          // Extract and store relevant data
+          this.categories = this.profileData.categories || [];
+          this.activityRecommendations =
+            this.profileData.activity_recommendations || [];
+          this.nutritionRecommendations =
+            this.profileData.nutrition_recommendations || [];
+
+          // Pass data to the RecommendationsService
+          this.recommendationsService.setRecommendations(
+            this.categories,
+            this.activityRecommendations,
+            this.nutritionRecommendations
+          );
+        }
       },
       error: () => {
         this.loading = false;

@@ -180,7 +180,6 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
             detail="Internal server error during registration"
         )
 
-# Login route with enhanced error handling
 @auth_router.post("/login")
 def login(request: LoginRequest, db: Session = Depends(get_db)):
     user = authenticate_user(db, request.username, request.password)
@@ -189,17 +188,29 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Username or password is incorrect"
         )
+
     try:
-        access_token = create_access_token(data={"username": user.username, "id": user.id})
-        
         # Check if the user has a profile associated with them
-        has_profile = db.query(models.Profile).filter(models.Profile.user_id == user.id).first() is not None
-        
+        profile = db.query(models.Profile).filter(models.Profile.user_id == user.id).first()
+        has_profile = profile is not None
+
+        # If the profile exists, get the associated category IDs
+        if has_profile:
+            category_ids = [category.id for category in profile.categories]
+        else:
+            category_ids = []
+
+        # Create the access token with the has_profile flag
+        access_token = create_access_token(
+            data={"username": user.username, "id": user.id, "has_profile": has_profile}
+        )
+
         return {
             "id": user.id,
             "username": user.username,
             "token": access_token,
-            "has_profile": has_profile  # Include hasProfile in the response
+            "has_profile": has_profile,  # Include hasProfile in the response
+            "category_ids": category_ids  # Include the list of category IDs
         }
 
     except ValidationError as e:

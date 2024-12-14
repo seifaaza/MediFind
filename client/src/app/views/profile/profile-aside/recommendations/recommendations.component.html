@@ -1,0 +1,91 @@
+<!-- recommendations.component.html -->
+<div class="max-w-5xl mx-auto flex flex-col gap-4 mt-6">
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-2">
+      <span
+        nz-icon
+        nzType="coffee"
+        nzTheme="outline"
+        class="text-base lg:text-lg text-primary"
+      ></span>
+      <h1 class="text-sm lg:text-base text-primary">
+        Nutrition Recommendations
+      </h1>
+    </div>
+    <p class="text-xs lg:text-sm text-slate-500 max-w-3xl">
+      Discover tailored nutrition tips and meal suggestions to support a
+      healthier lifestyle. Nourish your body with the right choices!
+    </p>
+    <ul class="flex flex-wrap gap-4 mt-4">
+      <li
+        *ngFor="let nutrition of nutritionRecommendations"
+        class="py-4 px-6 bg-slate-200/50 rounded-sm border-[1px] border-slate-300"
+      >
+        {{ nutrition }}
+      </li>
+    </ul>
+  </div>
+  <span class="bg-slate-300/80 h-[1.5px] w-2/3 mx-auto my-4 xl:my-6"></span>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-2">
+      <span
+        nz-icon
+        nzType="heart"
+        nzTheme="outline"
+        class="text-base lg:text-lg text-primary"
+      ></span>
+      <h1 class="text-sm lg:text-base text-primary">
+        Activity Recommendations
+      </h1>
+    </div>
+    <p class="text-xs lg:text-sm text-slate-500 max-w-3xl">
+      Explore personalized activities to boost your well-being and stay active.
+      From fitness routines to mindfulness exercises, find what works best for
+      you.
+    </p>
+    <ul class="flex flex-wrap gap-4 mt-4">
+      <li
+        *ngFor="let activity of activityRecommendations"
+        class="py-4 px-6 bg-slate-200/50 rounded-sm border-[1px] border-slate-300"
+      >
+        {{ activity }}
+      </li>
+    </ul>
+  </div>
+  <span
+    class="bg-slate-300/80 h-[1.5px] w-2/3 mx-auto my-4 lg:my-6 xl:my-8"
+  ></span>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-2">
+      <span
+        nz-icon
+        nzType="appstore"
+        nzTheme="outline"
+        class="text-base lg:text-lg text-primary"
+      ></span>
+      <h1 class="text-sm lg:text-base text-primary">Recommended Subjects</h1>
+    </div>
+    <p class="text-xs lg:text-sm text-slate-500 max-w-3xl">
+      Discover topics, articles, and insights tailored to your interests. Stay
+      informed and inspired with expert tips and practical advice.
+    </p>
+
+    <ul class="flex flex-wrap gap-4 mt-4">
+      <li
+        *ngFor="let category of categories"
+        [routerLink]="['/topics', category | lowercase | replaceSpaces]"
+        class="py-4 px-6 bg-primary/10 rounded-sm border-[1px] border-primary/20 flex items-center gap-3 cursor-pointer hover:bg-primary/25 duration-100"
+      >
+        <span
+          nz-icon
+          nzType="arrow-right"
+          nzTheme="outline"
+          class="text-base lg:text-lg text-slate-500"
+        ></span>
+        <h1 class="text-sm lg:text-base text-slate-500">
+          {{ category }}
+        </h1>
+      </li>
+    </ul>
+  </div>
+</div>

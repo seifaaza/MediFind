@@ -43,6 +43,25 @@ allergy_categories = Table(
     Column("category_id", Integer, ForeignKey("categories.id"), primary_key=True)
 )
 
+# Association table for Allergy and NutritionRecommendation many-to-many relationship
+allergy_nutrition_recommendations = Table(
+    "allergy_nutrition_recommendations",
+    Base.metadata,
+    Column("allergy_id", Integer, ForeignKey("allergies.id"), primary_key=True),
+    Column("nutrition_recommendation_id", Integer, ForeignKey("nutrition_recommendations.id"), primary_key=True)
+)
+
+# Define the NutritionRecommendation model for nutrition recommendations
+class NutritionRecommendation(Base):
+    __tablename__ = "nutrition_recommendations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+
+    # Many-to-many relationship with Allergy
+    allergies = relationship("Allergy", secondary=allergy_nutrition_recommendations, back_populates="nutrition_recommendations")
+
+
 # Define the Allergy model for the allergies list
 class Allergy(Base):
     __tablename__ = "allergies"
@@ -54,7 +73,10 @@ class Allergy(Base):
     profiles = relationship("Profile", secondary="profile_allergies", back_populates="allergies")
     
     # Categories associated with this allergy
-    categories = relationship("Category", secondary=allergy_categories, back_populates="allergies")
+    categories = relationship("Category", secondary="allergy_categories", back_populates="allergies")
+
+    # Many-to-many relationship with NutritionRecommendation
+    nutrition_recommendations = relationship("NutritionRecommendation", secondary=allergy_nutrition_recommendations, back_populates="allergies")
 
 # Association table for HealthGoal and Category many-to-many relationship
 health_goal_categories = Table(
@@ -64,7 +86,25 @@ health_goal_categories = Table(
     Column("category_id", Integer, ForeignKey("categories.id"), primary_key=True)
 )
 
-# Define the HealthGoal model for the health goals list
+# Association table for HealthGoal and ActivityRecommendation many-to-many relationship
+health_goal_activity_recommendations = Table(
+    "health_goal_activity_recommendations",
+    Base.metadata,
+    Column("health_goal_id", Integer, ForeignKey("health_goals.id"), primary_key=True),
+    Column("activity_recommendation_id", Integer, ForeignKey("activity_recommendations.id"), primary_key=True)
+)
+
+# Define the ActivityRecommendation model for activity recommendations
+class ActivityRecommendation(Base):
+    __tablename__ = "activity_recommendations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)  # Activity name, e.g., "Walking", "Yoga"
+
+    # Many-to-many relationship with HealthGoal
+    health_goals = relationship("HealthGoal", secondary=health_goal_activity_recommendations, back_populates="activity_recommendations")
+
+# Modify the HealthGoal model to include the relationship to ActivityRecommendation
 class HealthGoal(Base):
     __tablename__ = "health_goals"
 
@@ -77,13 +117,22 @@ class HealthGoal(Base):
     # Many-to-many relationship with Category
     categories = relationship("Category", secondary=health_goal_categories, back_populates="health_goals")
 
+    # Many-to-many relationship with ActivityRecommendation
+    activity_recommendations = relationship("ActivityRecommendation", secondary=health_goal_activity_recommendations, back_populates="health_goals")
+
+# Define the many-to-many relationship table if not already done
+profile_categories = Table(
+    'profile_categories', Base.metadata,
+    Column('profile_id', Integer, ForeignKey('profiles.id')),
+    Column('category_id', Integer, ForeignKey('categories.id'))
+)
 
 # Define the Category model
 class Category(Base):
     __tablename__ = "categories"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, nullable=False)
+    name = Column(String, nullable=False)
 
     # Relationship to Post model
     posts = relationship("Post", back_populates="category")
@@ -93,6 +142,9 @@ class Category(Base):
 
     # Allergies associated with this category
     allergies = relationship("Allergy", secondary=allergy_categories, back_populates="categories")
+
+    # Reverse relationship with Profile
+    profiles = relationship("Profile", secondary=profile_categories, back_populates="categories")
 
 # Association table for Profile and Allergy many-to-many relationship
 profile_allergies = Table(
@@ -129,7 +181,6 @@ class PersonalizedMedication(Base):
     # Relationship to the Profile model
     profile = relationship("Profile", back_populates="personalized_medications")
 
-
 class Profile(Base):
     __tablename__ = "profiles"
 
@@ -146,6 +197,8 @@ class Profile(Base):
     allergies = relationship("Allergy", secondary=profile_allergies, back_populates="profiles", cascade=None)
     health_goals = relationship("HealthGoal", secondary=profile_health_goals, back_populates="profiles", cascade=None)
     personalized_medications = relationship("PersonalizedMedication", back_populates="profile", cascade="all, delete-orphan")
+    # Add categories relationship
+    categories = relationship("Category", secondary=profile_categories, back_populates="profiles")
 
     # One-to-many relationships with cascading deletes for orphaned records (only where applicable)
     user = relationship("User", back_populates="profile", single_parent=True, cascade="all, delete-orphan")
@@ -237,54 +290,150 @@ def insert_initial_data(db_session):
             "Health Essentials": ["Pollen", "Dust", "Mold", "Latex", "Pet Dander"]
         }
 
+        # Activity recommendations data for each health goal
+        activity_recommendations_data = {
+            "Overcome Addiction": ["Yoga", "Meditation", "Walking", "Breathing Exercises"],
+            "Improve Mental Clarity": ["Meditation", "Mindfulness", "Reading", "Journaling"],
+            "Reduce Stress": ["Yoga", "Deep Breathing", "Running", "Progressive Muscle Relaxation"],
+            "Improve Mood": ["Walking", "Running", "Cycling", "Socializing", "Mindfulness"],
+            "Enhance Focus": ["Yoga", "Meditation", "Walking", "Reading", "Breathing Exercises"],
+            "Build Muscle": ["Weight Training", "Strength Exercises", "Protein Supplements"],
+            "Lose Weight": ["Cardio", "HIIT", "Running", "Swimming", "Cycling"],
+            "Increase Energy": ["Walking", "Yoga", "Swimming", "Cycling", "Stretching"],
+            "Eat Balanced Diet": ["Meal Planning", "Vegetable Cooking Classes", "Healthy Cooking Workshops"],
+            "Improve Digestion": ["Walking", "Yoga", "Hydration Exercises", "Low-Fiber Diet"],
+            "Maintain Healthy Weight": ["Regular Exercise", "Balanced Diet", "Portion Control"],
+            "Regular Health Checkups": ["Routine Exercise", "Dietary Adjustments", "Stress Management"],
+            "Prevent Chronic Diseases": ["Exercise", "Eating Whole Foods", "Reducing Sugar Intake"],
+            "Improve Heart Health": ["Running", "Cycling", "Swimming", "Cardio Exercise"],
+            "Get Educated on Health": ["Reading Health Books", "Attending Workshops", "Webinars"],
+            "Boost Immune System": ["Walking", "Healthy Eating", "Sleep Hygiene", "Mindfulness"],
+            "Improve Sleep Quality": ["Evening Yoga", "Breathing Exercises", "Consistent Bedtime"]
+        }
+
+        # Sample nutrition recommendations data
+        nutrition_recommendations_data = {
+            "Gluten": ["Gluten-Free Bread", "Rice-Based Meals", "Quinoa"],
+            "Dairy": ["Lactose-Free Milk", "Almond Milk", "Soy Cheese"],
+            "Shellfish": ["Plant-Based Protein", "Fresh Vegetables", "Grilled Chicken"],
+            "Peanuts": ["Sunflower Butter", "Almond Butter", "Cashew Butter"],
+            "Tree Nuts": ["Nut-Free Snacks", "Coconut-Based Products", "Seeds"],
+            "Nuts": ["Nut-Free Granola", "Fruit Snacks", "Vegetable Chips"],
+            "Soy": ["Soy-Free Protein Powder", "Coconut Aminos", "Legumes"],
+            "Wheat": ["Corn Tortillas", "Gluten-Free Pasta", "Rice Noodles"],
+            "Eggs": ["Chickpea Flour Omelet", "Tofu Scramble", "Vegan Mayonnaise"],
+            "Milk": ["Oat Milk", "Coconut Milk", "Rice Milk"],
+            "Pollen": ["Filtered Honey", "Antioxidant Smoothies", "Vitamin C-Rich Fruits"],
+            "Dust": ["Hydrating Foods", "Air-Purifying Plants", "Omega-3 Fatty Acids"],
+            "Mold": ["Fermented Foods", "Probiotic-Rich Foods", "Low-Moisture Fruits"],
+            "Latex": ["Non-Latex Alternatives", "Banana-Free Snacks", "Gluten-Free Cookies"],
+            "Pet Dander": ["Anti-Allergy Diet", "High-Vitamin Diet", "Probiotic Foods"]
+        }
+
         # Insert categories
         categories = {}
         for category_name in categories_data:
-            category = Category(name=category_name)
-            db_session.add(category)
-            categories[category_name] = category
+            existing_category = db_session.query(Category).filter_by(name=category_name).first()
+            if not existing_category:
+                category = Category(name=category_name)
+                db_session.add(category)
+                categories[category_name] = category
+            else:
+                categories[category_name] = existing_category
 
         # Insert health goals
         health_goals = {}
         for category_name, goal_names in health_goals_data.items():
             for goal_name in goal_names:
-                health_goal = HealthGoal(name=goal_name)
-                db_session.add(health_goal)
-                if category_name not in health_goals:
-                    health_goals[category_name] = []
-                health_goals[category_name].append(health_goal)
+                existing_goal = db_session.query(HealthGoal).filter_by(name=goal_name).first()
+                if not existing_goal:
+                    health_goal = HealthGoal(name=goal_name)
+                    db_session.add(health_goal)
+                    if category_name not in health_goals:
+                        health_goals[category_name] = []
+                    health_goals[category_name].append(health_goal)
+                else:
+                    health_goals[category_name].append(existing_goal)
 
         # Insert allergies
         allergies = {}
         for category_name, allergy_names in allergies_data.items():
             for allergy_name in allergy_names:
-                allergy = Allergy(name=allergy_name)
-                db_session.add(allergy)
-                if category_name not in allergies:
-                    allergies[category_name] = []
-                allergies[category_name].append(allergy)
+                existing_allergy = db_session.query(Allergy).filter_by(name=allergy_name).first()
+                if not existing_allergy:
+                    allergy = Allergy(name=allergy_name)
+                    db_session.add(allergy)
+                    if category_name not in allergies:
+                        allergies[category_name] = []
+                    allergies[category_name].append(allergy)
+                else:
+                    allergies[category_name].append(existing_allergy)
+
+        # Insert activity recommendations
+        activity_recommendations = {}
+        for health_goal_name, activities in activity_recommendations_data.items():
+            for activity_name in activities:
+                existing_activity = db_session.query(ActivityRecommendation).filter_by(name=activity_name).first()
+                if not existing_activity:
+                    activity = ActivityRecommendation(name=activity_name)
+                    db_session.add(activity)
+                    activity_recommendations.setdefault(health_goal_name, []).append(activity)
+                else:
+                    activity_recommendations.setdefault(health_goal_name, []).append(existing_activity)
+
+        # Insert nutrition recommendations
+        nutrition_recommendations = {}
+        for allergy_name, recommendations in nutrition_recommendations_data.items():
+            for recommendation_name in recommendations:
+                existing_recommendation = db_session.query(NutritionRecommendation).filter_by(name=recommendation_name).first()
+                if not existing_recommendation:
+                    recommendation = NutritionRecommendation(name=recommendation_name)
+                    db_session.add(recommendation)
+                    nutrition_recommendations.setdefault(allergy_name, []).append(recommendation)
+                else:
+                    nutrition_recommendations.setdefault(allergy_name, []).append(existing_recommendation)
 
         # Commit the data insertion
         db_session.commit()
 
-        # Now associate health goals and allergies with categories
+        # Associate health goals and allergies with categories
         for category_name, goal_list in health_goals.items():
             category = categories[category_name]
             for goal in goal_list:
-                category.health_goals.append(goal)
+                if goal not in category.health_goals:
+                    category.health_goals.append(goal)
 
         for category_name, allergy_list in allergies.items():
             category = categories[category_name]
             for allergy in allergy_list:
-                category.allergies.append(allergy)
+                if allergy not in category.allergies:
+                    category.allergies.append(allergy)
 
-        # Commit the associations
+        # Associate activity recommendations with health goals
+        for health_goal_name, activity_list in activity_recommendations.items():
+            for category_name, goal_list in health_goals.items():
+                health_goal = next((goal for goal in goal_list if goal.name == health_goal_name), None)
+                if health_goal:
+                    for activity in activity_list:
+                        if activity not in health_goal.activity_recommendations:
+                            health_goal.activity_recommendations.append(activity)
+
+        # Associate nutrition recommendations with allergies
+        for allergy_name, recommendation_list in nutrition_recommendations.items():
+            allergy = db_session.query(Allergy).filter_by(name=allergy_name).first()
+            if allergy:
+                for recommendation in recommendation_list:
+                    if recommendation not in allergy.nutrition_recommendations:
+                        allergy.nutrition_recommendations.append(recommendation)
+
+        # Final commit for associations
         db_session.commit()
+        print("Initial data inserted successfully.")
 
-        print("Initial data inserted and associations created successfully.")
     except Exception as e:
-        db_session.rollback()  # Rollback in case of an error
         print(f"Error inserting data: {e}")
+        db_session.rollback()
+
 
 # Create the sessionmaker for SQLAlchemy
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -302,13 +451,3 @@ if __name__ == "__main__":
     
     # Close the session after use
     db_session.close()
-
-
-
-
-
-
-
-
-
-

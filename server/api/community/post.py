@@ -48,8 +48,23 @@ def create_post(
     db.commit()
     db.refresh(new_post)
 
-    # Return success message
-    return {"message": "Post created successfully"}
+    # Calculate the number of comments for the new post
+    num_comments = db.query(models.Comment).filter(models.Comment.post_id == new_post.id).count()
+
+    # Build the response object
+    response = {
+        "id": new_post.id,
+        "title": new_post.title,
+        "content": new_post.content,
+        "created_at": new_post.created_at,
+        "category": new_post.category_id,
+        "author_id": new_post.user_id,
+        "author_username": current_user.username,
+        "num_comments": num_comments
+    }
+
+    # Return the response object
+    return response
 
 # Define the Meta model for pagination metadata
 class Meta(BaseModel):
@@ -63,7 +78,7 @@ class PostResponse(BaseModel):
     title: str
     content: str
     created_at: datetime
-    category: str
+    category: int
     author_id: int
     author_username: str
     num_comments: Optional[int] = 0  # Set default value to 0
@@ -79,7 +94,7 @@ def get_posts(
     db: Session = Depends(get_db),
     category: Optional[int] = Query(None),
     skip: int = Query(0, ge=0),
-    limit: int = Query(10, le=100),
+    limit: int = Query(12, le=100),
 ):
     # Check if the category exists (if provided)
     if category is not None:
@@ -97,7 +112,7 @@ def get_posts(
             models.Post.title,
             models.Post.content,
             models.Post.created_at,
-            models.Category.name.label("category"),
+            models.Category.id.label("category_id"),  # Use category_id
             models.User.id.label("author_id"),
             models.User.username.label("author_username"),
             func.count(models.Comment.id).label("num_comments"),  # Count comments
@@ -110,16 +125,20 @@ def get_posts(
             models.Post.title,
             models.Post.content,
             models.Post.created_at,
-            models.Category.name,
+            models.Category.id,  # Group by category_id
             models.User.id,
             models.User.username,
         )  # Group by all selected columns
-        .order_by(models.Post.created_at.desc())  # Sort by the latest created posts
     )
 
-    # Filter by category if provided
+    # Apply ordering logic to prioritize posts in the specified category
     if category is not None:
-        query = query.filter(models.Post.category_id == category)
+        query = query.order_by(
+            (models.Post.category_id == category).desc(),  # Posts in the category come first
+            models.Post.created_at.desc(),  # Then sort by creation date
+        )
+    else:
+        query = query.order_by(models.Post.created_at.desc())  # Default ordering by creation date
 
     # Count total items for metadata
     total_items = query.count()
@@ -134,10 +153,10 @@ def get_posts(
             title=post.title,
             content=post.content,
             created_at=post.created_at,
-            category=post.category,
+            category=post.category_id,  # Use category_id in the response
             author_id=post.author_id,
             author_username=post.author_username,
-            num_comments=post.num_comments if post.num_comments is not None else 0  # Handle None case
+            num_comments=post.num_comments if post.num_comments is not None else 0,  # Handle None case
         )
         for post in posts
     ]
@@ -145,7 +164,7 @@ def get_posts(
     # Build paginated response
     return PaginatedResponse(
         meta=Meta(total_items=total_items, skip=skip, limit=limit),  # Create a Meta instance
-        data=serialized_posts
+        data=serialized_posts,
     )
 
 @post_router.get("/{post_id}")

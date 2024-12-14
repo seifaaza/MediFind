@@ -1,65 +1,199 @@
-<div class="w-full h-full">
-  <ng-template #noProfile>
-    <div
-      class="flex flex-col justify-center items-center gap-6 my-8 md:my-16 lg:my-24 xl:my-28 2xl:my-32"
-    >
-      <lord-icon
-        #lordIcon
-        src="https://cdn.lordicon.com/wjyqkiew.json"
-        trigger="in"
-        stroke="light"
-        state="in-reveal"
-        colors="primary:#64748b,secondary:#0894ff"
-        style="width: 150px; height: 150px"
-      >
-      </lord-icon>
-
-      <h2 class="text-slate-600 text-base max-w-lg text-center mt-2">
-        Create your profile to unlock personalized features and exclusive
-        content!
-      </h2>
-
-      <button
-        [routerLink]="'/create-profile/personal-info'"
-        nz-button
-        nzType="primary"
-        nzSize="large"
-        class="flex justify-center items-center"
-      >
-        Create Profile
-        <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
-      </button>
-    </div>
-  </ng-template>
-  <div *ngIf="hasProfile === true; else noProfile">
-    <p>Welcome to your profile!</p>
+<div class="max-w-5xl mx-auto mt-2 xl:mt-6">
+  <div
+    *ngIf="!loading && !hasProfile"
+    class="flex flex-col justify-center items-center gap-6 my-8 md:my-16 lg:my-24 xl:my-28 2xl:my-32"
+  >
     <lord-icon
       #lordIcon
-      src="https://cdn.lordicon.com/kdduutaw.json"
+      src="https://cdn.lordicon.com/wjyqkiew.json"
       trigger="in"
       stroke="light"
       state="in-reveal"
       colors="primary:#64748b,secondary:#0894ff"
-      style="width: 110px; height: 110px"
+      style="width: 150px; height: 150px"
     >
     </lord-icon>
 
-    <div *ngIf="loading" class="loading-spinner">Loading profile data...</div>
+    <h2 class="text-slate-600 text-base max-w-lg text-center mt-2">
+      Create your profile to unlock personalized features and exclusive content!
+    </h2>
 
-    <div *ngIf="!loading">
-      <div *ngIf="hasProfile; else noProfile">
-        <h3>Your Profile</h3>
-        <p><strong>Date of Birth:</strong> {{ profileData?.date_of_birth }}</p>
-        <p><strong>Gender:</strong> {{ profileData?.gender }}</p>
-        <p><strong>Weight:</strong> {{ profileData?.weight }} kg</p>
-        <p><strong>Height:</strong> {{ profileData?.height }} cm</p>
-        <p>
-          <strong>Allergies:</strong> {{ profileData?.allergies.join(", ") }}
-        </p>
-        <p>
-          <strong>Health Goals:</strong>
-          {{ profileData?.health_goals.join(", ") }}
-        </p>
+    <button
+      [routerLink]="'/create-profile/personal-info'"
+      nz-button
+      nzType="primary"
+      nzSize="large"
+      class="flex justify-center items-center"
+    >
+      Create Profile
+      <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+    </button>
+  </div>
+  <div *ngIf="!loading && hasProfile">
+    <div class="flex justify-end">
+      <h3 class="text-xs lg:text-sm text-slate-500">
+        Joined At {{ profileData.created_at | date }}
+      </h3>
+    </div>
+    <div class="flex flex-col gap-6 mt-6">
+      <div
+        class="flex flex-col lg:flex-row items-center gap-4 md:gap-8 xl:gap-16"
+      >
+        <div class="flex flex-col gap-2 items-center">
+          <lord-icon
+            src="https://cdn.lordicon.com/kdduutaw.json"
+            trigger="in"
+            stroke="light"
+            state="in-reveal"
+            colors="primary:#64748b,secondary:#0894ff"
+            style="width: 100px; height: 100px"
+          >
+          </lord-icon>
+          <h1 class="text-primary text-base xl:text-lg capitalize text-center">
+            Welcome To Your Profile, {{ username }}
+          </h1>
+        </div>
+        <span
+          class="bg-slate-200 mt-4 lg:mt-0 w-2/3 h-[2px] lg:w-[2px] lg:h-44 lg:ml-6 rounded-md"
+        ></span>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2">
+          <div
+            class="flex justify-center items-center gap-2 xl:gap-3 px-5 xl:px-8 py-3 xl:py-6"
+          >
+            <span
+              nz-icon
+              nzType="carry-out"
+              nzTheme="outline"
+              class="text-base lg:text-lg text-slate-500"
+            ></span>
+
+            <h1
+              class="text-base lg:text-lg text-slate-600 capitalize whitespace-nowrap"
+            >
+              {{ profileData.age }} Yo
+            </h1>
+          </div>
+
+          <div
+            class="flex justify-center items-center gap-2 lg:gap-3 px-5 py-3"
+          >
+            <span
+              *ngIf="profileData.gender === 'male'"
+              nz-icon
+              nzType="man"
+              nzTheme="outline"
+              class="text-base lg:text-lg text-slate-600"
+            ></span>
+            <span
+              *ngIf="profileData.gender === 'female'"
+              nz-icon
+              nzType="man"
+              nzTheme="outline"
+              class="text-base lg:text-lg text-slate-600"
+            ></span>
+            <h1
+              class="text-base lg:text-lg text-slate-600 capitalize whitespace-nowrap"
+            >
+              {{ profileData.gender }}
+            </h1>
+          </div>
+          <div
+            class="flex justify-center items-center gap-2 lg:gap-3 px-5 py-3"
+          >
+            <span
+              nz-icon
+              nzType="to-top"
+              nzTheme="outline"
+              class="text-base lg:text-lg text-slate-600"
+            ></span>
+            <h1
+              class="text-base lg:text-lg text-slate-600 capitalize whitespace-nowrap"
+            >
+              {{ profileData.height }} cm
+            </h1>
+          </div>
+          <div
+            class="flex justify-center items-center gap-2 lg:gap-3 px-5 py-3"
+          >
+            <span
+              nz-icon
+              nzType="dashboard"
+              nzTheme="outline"
+              class="text-base lg:text-lg text-slate-600"
+            ></span>
+            <h1
+              class="text-base lg:text-lg text-slate-600 capitalize whitespace-nowrap"
+            >
+              {{ profileData.weight }} kg
+            </h1>
+          </div>
+        </div>
+      </div>
+      <span class="bg-slate-300/80 h-[1.5px] w-2/3 mx-auto my-4 xl:my-6"></span>
+
+      <div class="flex flex-col lg:flex-row gap-10 lg:gap-24">
+        <div class="w-full lg:w-1/3">
+          <div class="flex items-center gap-2">
+            <span
+              nz-icon
+              nzType="medicine-box"
+              nzTheme="outline"
+              class="text-base lg:text-lg text-primary"
+            ></span>
+            <h1 class="text-sm lg:text-base text-primary">
+              Your Personalized Medications:
+            </h1>
+          </div>
+          <ul class="flex flex-wrap gap-4 mt-4 lg:mt-6">
+            <li
+              *ngFor="let medication of profileData.personalized_medications"
+              class="bg-slate-200/50 px-6 py-4"
+            >
+              {{ medication }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="w-full lg:w-1/3">
+          <div class="flex items-center gap-2">
+            <span
+              nz-icon
+              nzType="warning"
+              nzTheme="outline"
+              class="text-base lg:text-lg text-primary"
+            ></span>
+            <h1 class="text-sm lg:text-base text-primary">Your Allergies</h1>
+          </div>
+
+          <ul class="flex flex-wrap gap-4 mt-4 lg:mt-6">
+            <li
+              *ngFor="let allergy of profileData.allergies"
+              class="bg-slate-200/50 px-6 py-4"
+            >
+              {{ allergy }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="w-full lg:w-1/3">
+          <div class="flex items-center gap-2">
+            <span
+              nz-icon
+              nzType="check-circle"
+              nzTheme="outline"
+              class="text-base lg:text-lg text-primary"
+            ></span>
+            <h1 class="text-sm lg:text-base text-primary">Your Health Goals</h1>
+          </div>
+          <ul class="flex flex-wrap gap-4 mt-4 lg:mt-6">
+            <li
+              *ngFor="let goal of profileData.health_goals"
+              class="bg-slate-200/50 px-6 py-4"
+            >
+              {{ goal }}
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

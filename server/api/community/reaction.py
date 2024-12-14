@@ -11,6 +11,39 @@ from typing import List
 # Create an APIRouter instance for comment-related routes
 reaction_router = APIRouter()
 
+@reaction_router.get("/comment/{comment_id}", status_code=status.HTTP_200_OK)
+def get_reaction(
+    comment_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    # Check if the comment exists
+    comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
+    if not comment:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Comment not found."
+        )
+
+    # Check if the user has reacted to this comment
+    reaction = (
+        db.query(models.LikeDislike)
+        .filter(
+            models.LikeDislike.comment_id == comment_id,
+            models.LikeDislike.user_id == current_user.id
+        )
+        .first()
+    )
+
+    if reaction:
+        return {
+            "reaction": "like" if reaction.value == 1 else "dislike"
+        }
+    else:
+        return {
+            "reaction": "none"
+        }
+
 @reaction_router.post("/comment/{comment_id}", status_code=status.HTTP_200_OK)
 def add_reaction(
     comment_id: int,
@@ -77,47 +110,54 @@ def add_reaction(
         "dislikes_count": dislikes_count,
     }
 
-@reaction_router.delete("/{reaction_id}", status_code=status.HTTP_200_OK)
+@reaction_router.delete("/comment/{comment_id}", status_code=status.HTTP_200_OK)
 def remove_reaction(
-    reaction_id: int,
+    comment_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    # Find the reaction by ID
-    reaction = (
+    # Check if the comment exists
+    comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
+    if not comment:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Comment not found."
+        )
+
+    # Check if the user has reacted to this comment
+    existing_reaction = (
         db.query(models.LikeDislike)
         .filter(
-            models.LikeDislike.id == reaction_id,
-            models.LikeDislike.user_id == current_user.id  # Ensure it's the user's reaction
+            models.LikeDislike.comment_id == comment_id,
+            models.LikeDislike.user_id == current_user.id
         )
         .first()
     )
 
-    # Validate the reaction exists
-    if not reaction:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Reaction not found or you don't have permission to remove it."
+    if existing_reaction:
+        # Delete the existing reaction
+        db.delete(existing_reaction)
+        db.commit()
+
+        # Calculate the total likes and dislikes after removal
+        likes_count = (
+            db.query(func.count())
+            .filter(models.LikeDislike.comment_id == comment_id, models.LikeDislike.value == 1)
+            .scalar()
+        )
+        dislikes_count = (
+            db.query(func.count())
+            .filter(models.LikeDislike.comment_id == comment_id, models.LikeDislike.value == -1)
+            .scalar()
         )
 
-    # Delete the reaction
-    db.delete(reaction)
-    db.commit()
-
-    # Calculate updated likes and dislikes for the associated comment
-    likes_count = (
-        db.query(func.count())
-        .filter(models.LikeDislike.comment_id == reaction.comment_id, models.LikeDislike.value == 1)
-        .scalar()
-    )
-    dislikes_count = (
-        db.query(func.count())
-        .filter(models.LikeDislike.comment_id == reaction.comment_id, models.LikeDislike.value == -1)
-        .scalar()
-    )
-
-    return {
-        "message": "Reaction removed successfully.",
-        "likes_count": likes_count,
-        "dislikes_count": dislikes_count,
-    }
+        return {
+            "message": "Reaction removed successfully.",
+            "likes_count": likes_count,
+            "dislikes_count": dislikes_count,
+        }
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No reaction found to remove."
+        )

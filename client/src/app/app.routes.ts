@@ -28,6 +28,7 @@ import { MedicalInfoComponent } from './views/profile/create-profile/steps/medic
 import { AuthProfileGuard } from './core/guards/authProfile.guard';
 import { AuthNoProfileGuard } from './core/guards/authNoProfile.guard';
 import { NoAuthGuard } from './core/guards/noAuth.guard';
+import { RecommendationsComponent } from './views/profile/profile-aside/recommendations/recommendations.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -66,6 +67,11 @@ export const routes: Routes = [
     children: [
       { path: '', component: ProfileInfoComponent, canActivate: [AuthGuard] },
       {
+        path: 'recommendations',
+        component: RecommendationsComponent,
+        canActivate: [AuthProfileGuard],
+      },
+      {
         path: 'achievements',
         component: AchievementsComponent,
         canActivate: [AuthProfileGuard],
@@ -87,10 +93,10 @@ export const routes: Routes = [
         component: HealthEssentialsItemComponent,
       },
       { path: 'preventive-care', component: PreventiveCareComponent },
-      { path: 'nutrition', component: NutritionComponent },
-      { path: 'fitness', component: FitnessComponent },
+      { path: 'nutrition-&-healthy-eating', component: NutritionComponent },
+      { path: 'fitness-&-physical-health', component: FitnessComponent },
       { path: 'mental-well-being', component: MentalWellBeingComponent },
-      { path: 'addiction', component: AddictionComponent },
+      { path: 'addiction-recovery-&-support', component: AddictionComponent },
     ],
   },
   {

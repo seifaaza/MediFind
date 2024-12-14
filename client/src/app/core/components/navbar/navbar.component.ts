@@ -72,12 +72,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
         {
           label: 'Nutrition & Healthy Eating',
           icon: 'coffee',
-          route: '/topics/nutrition',
+          route: '/topics/nutrition-&-healthy-eating',
         },
         {
           label: 'Fitness & Physical Health',
           icon: 'thunderbolt',
-          route: '/topics/fitness',
+          route: '/topics/fitness-&-physical-health',
         },
         {
           label: 'Mental Well-being',
@@ -87,7 +87,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         {
           label: 'Addiction Recovery & Support',
           icon: 'sync',
-          route: '/topics/addiction',
+          route: '/topics/addiction-recovery-&-support',
         },
       ],
     },

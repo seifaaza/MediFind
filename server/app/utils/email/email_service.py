@@ -85,7 +85,7 @@ def send_notification_email(recipient: str, post_id: str):
         html_body = load_html_template("comment_notif.html")
         
         # Replace placeholders in the template with actual values
-        post_url = f"{CLIENT_URL}/community/{post_id}"
+        post_url = f"{CLIENT_URL}/community/post/{post_id}"
         html_body = html_body.replace("{{post_url}}", post_url)
 
     except Exception as e:

@@ -143,6 +143,12 @@ export class MedicalInfoComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           this.setAuthCookie(response.token);
+          if (response && response.category_ids) {
+            localStorage.setItem(
+              'categoryIds',
+              JSON.stringify(response.category_ids)
+            );
+          }
           this.loading = false;
           this.router.navigate(['/profile']);
           sessionStorage.clear();

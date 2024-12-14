@@ -5,9 +5,10 @@ from app.db.database import get_db
 from api.auth import get_current_user
 from pydantic import BaseModel
 from datetime import datetime
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, asc
 from typing import List
 from app.utils.email.email_service import send_notification_email
+
 
 # Create an APIRouter instance for comment-related routes
 comment_router = APIRouter()
@@ -44,13 +45,29 @@ def create_comment(
     db.commit()
     db.refresh(new_comment)
 
+    # Calculate the likes and dislikes counts
+    likes_count = db.query(models.LikeDislike).filter(models.LikeDislike.comment_id == new_comment.id, models.LikeDislike.value == 1).count()
+    dislikes_count = db.query(models.LikeDislike).filter(models.LikeDislike.comment_id == new_comment.id, models.LikeDislike.value == -1).count()
+
+    # Get the current user's username
+    username = current_user.username
+
     # Send an email notification to the post owner, but not if they are commenting on their own post
     if current_user.id != post.user_id:
         # Construct the full post URL
         send_notification_email(post.user.email, post_id)
 
-    # Return the created comment
-    return {"message": "Comment created successfully"}
+    # Return the created comment in the specified format
+    return {
+        "id": new_comment.id,
+        "content": new_comment.content,
+        "created_at": new_comment.created_at.isoformat(),
+        "likes_count": likes_count,
+        "dislikes_count": dislikes_count,
+        "user_id": new_comment.user_id,
+        "username": username,
+    }
+
 
 @comment_router.delete("/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_comment(
@@ -101,37 +118,28 @@ class PaginatedComments(BaseModel):
     meta: Meta
     data: List[CommentResponse]
 
-# Get comments endpoint
 @comment_router.get("/{post_id}", response_model=PaginatedComments)
 def get_comments(
     post_id: int,
-    db: Session = Depends(get_db),
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, le=100),
-    order_by: str = Query("latest", regex="^(latest|most_liked)$"),
+    skip: int = 0,
+    limit: int = 10,
+    order_by: str = "most_liked",  # default sorting order
+    db: Session = Depends(get_db)
 ):
-    # Validate the post exists
-    post_exists = db.query(func.count(models.Post.id)).filter(models.Post.id == post_id).scalar()
-    if not post_exists:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Post not found",
-        )
-
     # Base query to retrieve comments
     query = (
         db.query(
             models.Comment.id,
             models.Comment.content,
             models.Comment.created_at,
-            func.count(func.nullif(models.LikeDislike.value, -1)).label("likes_count"),
-            func.count(func.nullif(models.LikeDislike.value, 1)).label("dislikes_count"),
-            models.User.id.label("user_id"),
-            models.User.username.label("username"),
+            func.count(func.nullif(models.LikeDislike.value, -1)).label("likes_count"),  # Count of likes
+            func.count(func.nullif(models.LikeDislike.value, 1)).label("dislikes_count"),  # Count of dislikes
+            models.User.id.label("user_id"),  # User ID
+            models.User.username.label("username"),  # Username
         )
-        .join(models.User, models.Comment.user_id == models.User.id)
-        .outerjoin(models.LikeDislike, models.LikeDislike.comment_id == models.Comment.id)
-        .filter(models.Comment.post_id == post_id)
+        .join(models.User, models.Comment.user_id == models.User.id)  # Join User model
+        .outerjoin(models.LikeDislike, models.LikeDislike.comment_id == models.Comment.id)  # Join LikeDislike model
+        .filter(models.Comment.post_id == post_id)  # Filter by post_id
         .group_by(
             models.Comment.id,
             models.User.id,
@@ -141,17 +149,17 @@ def get_comments(
         )
     )
 
-    # Check if any likes exist when order_by is 'most_liked'
+    # Apply ordering based on likes - dislikes score
     if order_by == "most_liked":
-        likes_exist = db.query(func.count(models.LikeDislike.id)).filter(
-            models.LikeDislike.comment_id == models.Comment.id
-        ).scalar()
-        if likes_exist == 0:
-            order_by = "latest"  # Fallback to latest if no likes exist
-
-    # Apply ordering
-    if order_by == "most_liked":
-        query = query.order_by(desc("likes_count"))
+        query = query.order_by(
+            desc(
+                func.count(func.nullif(models.LikeDislike.value, -1))  # likes count
+                - func.count(func.nullif(models.LikeDislike.value, 1))  # dislikes count
+            ),  # Sort by likes - dislikes score
+            desc(func.count(func.nullif(models.LikeDislike.value, -1))),  # Secondary: by likes
+            asc(func.count(func.nullif(models.LikeDislike.value, 1))),  # Tertiary: by fewer dislikes
+            desc(models.Comment.created_at),  # Finally: by creation date
+        )
     else:  # Default: order by latest
         query = query.order_by(desc(models.Comment.created_at))
 
@@ -175,7 +183,7 @@ def get_comments(
         for comment in comments
     ]
 
-    # Build metadata
+    # Build metadata for pagination
     meta = Meta(
         total_items=total_items,
         skip=skip,
