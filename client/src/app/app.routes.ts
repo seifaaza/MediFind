@@ -7,7 +7,6 @@ import { SignInComponent } from './views/account/sign-in/sign-in.component';
 import { SignUpComponent } from './views/account/sign-up/sign-up.component';
 import { CreateProfileComponent } from './views/profile/create-profile/create-profile.component';
 import { ProfileComponent } from './views/profile/profile.component';
-import { MedicinesComponent } from './views/medicines/medicines.component';
 import { CommunityComponent } from './views/community/community.component';
 import { EventsComponent } from './views/events/events.component';
 import { AuthGuard } from './core/guards/auth.guard';
@@ -29,11 +28,26 @@ import { AuthProfileGuard } from './core/guards/authProfile.guard';
 import { AuthNoProfileGuard } from './core/guards/authNoProfile.guard';
 import { NoAuthGuard } from './core/guards/noAuth.guard';
 import { RecommendationsComponent } from './views/profile/profile-aside/recommendations/recommendations.component';
+import { FindComponent } from './views/find/find.component';
+import { DoctorsComponent } from './views/find/doctors/doctors.component';
+import { PharmaciesComponent } from './views/find/pharmacies/pharmacies.component';
+import { MedicinesComponent } from './views/find/medicines/medicines.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'learn-more', component: LearnMoreComponent },
-  { path: 'medicines', component: MedicinesComponent },
+  {
+    path: 'find',
+    children: [
+      { path: '', component: FindComponent },
+      { path: 'medicines', component: MedicinesComponent },
+      {
+        path: 'doctors',
+        component: DoctorsComponent,
+      },
+      { path: 'pharmacies', component: PharmaciesComponent },
+    ],
+  },
 
   {
     path: 'community',

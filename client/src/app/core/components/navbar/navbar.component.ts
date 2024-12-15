@@ -52,7 +52,28 @@ interface DropdownItem {
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   links: Link[] = [
-    { label: 'Medicines', icon: 'medicine-box', route: '/medicines' },
+    {
+      label: 'Find',
+      icon: 'search',
+      route: '/find',
+      dropdownItems: [
+        {
+          label: 'Medicines',
+          route: '/find/medicines',
+          icon: 'medicine-box',
+        },
+        {
+          label: 'Doctors',
+          route: '/find/doctors',
+          icon: 'user',
+        },
+        {
+          label: 'Pharmacies',
+          route: '/find/pharmacies',
+          icon: 'home',
+        },
+      ],
+    },
     { label: 'Community', icon: 'message', route: '/community' },
     {
       label: 'Topics',
